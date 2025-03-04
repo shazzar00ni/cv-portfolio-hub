@@ -32,7 +32,7 @@ const Contact = () => {
     },
     {
       icon: Github,
-      url: "https://github.com/",
+      url: "https://github.com/shazzar00ni",
       label: "GitHub"
     }
   ];

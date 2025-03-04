@@ -6,12 +6,14 @@ interface AnimatedSectionProps {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  onClick?: () => void; // Add onClick handler to props
 }
 
 const AnimatedSection: React.FC<AnimatedSectionProps> = ({ 
   children, 
   className, 
-  delay = 0 
+  delay = 0,
+  onClick // Add onClick to the component props
 }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -51,6 +53,7 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
         className
       )}
       style={{ transitionDelay: `${delay}ms` }}
+      onClick={onClick} // Apply the onClick handler
     >
       {children}
     </div>
