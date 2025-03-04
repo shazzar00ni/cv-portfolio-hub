@@ -32,7 +32,7 @@ const Header = () => {
           <AnimatedSection className="flex flex-col gap-4" delay={200}>
             <div className="flex items-center gap-3">
               <MapPin size={20} className="text-primary opacity-80" />
-              <span className="text-sm md:text-base">17 Cagney Way, Lesmurdie, 6076, Australia</span>
+              <span className="text-sm md:text-base">Perth, W.A.</span>
             </div>
             
             <div className="flex items-center gap-3">

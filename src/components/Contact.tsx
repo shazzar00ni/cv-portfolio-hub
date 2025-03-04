@@ -6,8 +6,8 @@ const Contact = () => {
   const contactInfo = [
     {
       icon: MapPin,
-      label: "Address",
-      value: "17 Cagney Way, Lesmurdie, 6076, Australia",
+      label: "Location",
+      value: "Perth, W.A.",
       delay: 0
     },
     {
