@@ -27,7 +27,7 @@ const Contact = () => {
   const socialLinks = [
     {
       icon: Linkedin,
-      url: "https://linkedin.com/shannon-lockett",
+      url: "https://www.linkedin.com/in/shannon-lockett-73bb555b/",
       label: "LinkedIn"
     },
     {
