@@ -1,0 +1,274 @@
+
+import { useState } from 'react';
+import { Image as ImageIcon, Plus, X } from 'lucide-react';
+import AnimatedSection from './AnimatedSection';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
+
+type PortfolioItem = {
+  id: string;
+  image: string;
+  title: string;
+  description: string;
+  category: string;
+};
+
+const Portfolio = () => {
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([
+    {
+      id: '1',
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      title: 'Web Development Project',
+      description: 'Modern responsive website built with React and Tailwind CSS.',
+      category: 'Web Development',
+    },
+    {
+      id: '2',
+      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      title: 'Mobile App Design',
+      description: 'UI/UX design for a productivity mobile application.',
+      category: 'UI/UX Design',
+    },
+    {
+      id: '3',
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      title: 'Backend System',
+      description: 'Robust backend architecture with Node.js and PostgreSQL.',
+      category: 'Backend',
+    },
+  ]);
+
+  const [filter, setFilter] = useState<string>('all');
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [newItem, setNewItem] = useState<Partial<PortfolioItem>>({
+    id: Math.random().toString(36).substring(2, 9),
+    title: '',
+    description: '',
+    category: '',
+    image: '',
+  });
+
+  const categories = ['all', ...new Set(portfolioItems.map((item) => item.category))];
+
+  const filteredItems = filter === 'all' 
+    ? portfolioItems 
+    : portfolioItems.filter(item => item.category === filter);
+
+  const handleUpload = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // In a real application, this would handle file upload to a service
+    // For now we'll just simulate adding the item to our state
+    if (newItem.title && newItem.description && newItem.category && newItem.image) {
+      setPortfolioItems(prev => [
+        ...prev, 
+        { ...newItem, id: newItem.id || Math.random().toString(36).substring(2, 9) } as PortfolioItem
+      ]);
+      setIsUploadModalOpen(false);
+      setNewItem({
+        id: Math.random().toString(36).substring(2, 9),
+        title: '',
+        description: '',
+        category: '',
+        image: '',
+      });
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // In a real app, you would upload to storage service
+      // For now, just create a local object URL
+      const imageUrl = URL.createObjectURL(file);
+      setNewItem({ ...newItem, image: imageUrl });
+    }
+  };
+
+  const handleRemoveItem = (id: string) => {
+    setPortfolioItems(prev => prev.filter(item => item.id !== id));
+  };
+
+  return (
+    <section id="portfolio" className="py-16 md:py-24">
+      <div className="container-custom">
+        <AnimatedSection>
+          <h2 className="section-heading">PORTFOLIO</h2>
+          
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            {categories.map((category) => (
+              <Button
+                key={category}
+                variant={filter === category ? "default" : "outline"}
+                onClick={() => setFilter(category)}
+                className="capitalize"
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map((item) => (
+              <AnimatedSection 
+                key={item.id} 
+                className="group bg-card border border-muted rounded-lg overflow-hidden hover-lift"
+                delay={parseInt(item.id) * 100}
+              >
+                <div className="relative aspect-video">
+                  <img 
+                    src={item.image} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover"
+                  />
+                  <button 
+                    onClick={() => handleRemoveItem(item.id)}
+                    className="absolute top-2 right-2 p-1 bg-background/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X size={16} className="text-destructive" />
+                  </button>
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-medium mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm mb-3">{item.description}</p>
+                  <span className="inline-block px-3 py-1 text-xs rounded-full bg-secondary text-secondary-foreground">
+                    {item.category}
+                  </span>
+                </div>
+              </AnimatedSection>
+            ))}
+            
+            <AnimatedSection 
+              className="flex flex-col items-center justify-center border border-dashed border-muted rounded-lg p-8 hover-lift cursor-pointer h-full min-h-[280px]"
+              onClick={() => setIsUploadModalOpen(true)}
+              delay={400}
+            >
+              <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center mb-4">
+                <Plus size={24} className="text-primary" />
+              </div>
+              <p className="text-center font-medium">Add New Project</p>
+              <p className="text-center text-muted-foreground text-sm mt-2">
+                Upload images, add details and share your work
+              </p>
+            </AnimatedSection>
+          </div>
+        </AnimatedSection>
+      </div>
+
+      {/* Simple modal for uploading - in a real app you might use a proper modal component */}
+      {isUploadModalOpen && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-card border border-muted rounded-lg shadow-lg w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b border-muted">
+              <h3 className="text-lg font-medium">Add New Project</h3>
+              <button 
+                onClick={() => setIsUploadModalOpen(false)}
+                className="rounded-full p-1 hover:bg-muted"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleUpload} className="p-6">
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Project Image</label>
+                <div className={cn(
+                  "border-2 border-dashed border-muted rounded-lg p-4 text-center",
+                  newItem.image ? "border-primary" : ""
+                )}>
+                  {newItem.image ? (
+                    <div className="relative aspect-video mb-2">
+                      <img 
+                        src={newItem.image} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover rounded-md" 
+                      />
+                      <button 
+                        type="button"
+                        onClick={() => setNewItem({...newItem, image: ''})}
+                        className="absolute top-2 right-2 p-1 bg-background/80 rounded-full"
+                      >
+                        <X size={16} className="text-destructive" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center py-4">
+                      <ImageIcon size={40} className="text-muted-foreground mb-2" />
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Drag & drop or click to upload
+                      </p>
+                    </div>
+                  )}
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleFileChange}
+                    className="hidden" 
+                    id="image-upload" 
+                  />
+                  <label 
+                    htmlFor="image-upload" 
+                    className="mt-2 inline-block px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium cursor-pointer"
+                  >
+                    {newItem.image ? 'Replace Image' : 'Select Image'}
+                  </label>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <label htmlFor="title" className="block text-sm font-medium mb-2">Title</label>
+                <input 
+                  type="text" 
+                  id="title"
+                  value={newItem.title} 
+                  onChange={(e) => setNewItem({...newItem, title: e.target.value})}
+                  className="w-full px-3 py-2 border border-muted rounded-md" 
+                  required 
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label htmlFor="category" className="block text-sm font-medium mb-2">Category</label>
+                <input 
+                  type="text" 
+                  id="category" 
+                  value={newItem.category} 
+                  onChange={(e) => setNewItem({...newItem, category: e.target.value})}
+                  className="w-full px-3 py-2 border border-muted rounded-md" 
+                  required 
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label htmlFor="description" className="block text-sm font-medium mb-2">Description</label>
+                <textarea 
+                  id="description" 
+                  value={newItem.description} 
+                  onChange={(e) => setNewItem({...newItem, description: e.target.value})}
+                  className="w-full px-3 py-2 border border-muted rounded-md" 
+                  rows={3} 
+                  required 
+                />
+              </div>
+              
+              <div className="flex justify-end gap-3 mt-6">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setIsUploadModalOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={!newItem.image || !newItem.title || !newItem.description || !newItem.category}>
+                  Add Project
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+};
+
+export default Portfolio;
