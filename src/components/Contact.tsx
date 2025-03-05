@@ -1,4 +1,3 @@
-
 import { MapPin, Phone, Mail, Linkedin, Github } from 'lucide-react';
 import AnimatedSection from './AnimatedSection';
 
@@ -27,7 +26,7 @@ const Contact = () => {
   const socialLinks = [
     {
       icon: Linkedin,
-      url: "https://www.linkedin.com/in/shannon-lockett-73bb555b/",
+      url: "https://www.linkedin.com/in/shannon-lockett",
       label: "LinkedIn"
     },
     {
