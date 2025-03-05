@@ -1,6 +1,7 @@
 
 import AnimatedSection from './AnimatedSection';
 import Timeline from './Timeline';
+import Education from './Education';
 
 const Experience = () => {
   return (
@@ -9,6 +10,11 @@ const Experience = () => {
         <AnimatedSection>
           <h2 className="section-heading">WORK EXPERIENCE</h2>
           <Timeline />
+        </AnimatedSection>
+        
+        <AnimatedSection className="mt-16">
+          <h2 className="section-heading">EDUCATION</h2>
+          <Education />
         </AnimatedSection>
       </div>
     </section>

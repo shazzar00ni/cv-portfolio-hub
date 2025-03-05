@@ -5,6 +5,21 @@ const Timeline = () => {
   return (
     <div className="relative">
       <TimelineItem
+        title="GROCERY TEAM MEMBER"
+        period="JUN 2023 - NOV 2024"
+        company="WOOLWORTHS LTD"
+        location="COCKBURN/SUCCESS"
+        achievements={[
+          "Enhanced customer satisfaction and experience with tailored advice.",
+          "Strengthened team collaboration to meet targets.",
+          "Improved inventory accuracy through audits.",
+          "Elevated brand visibility with creative displays.",
+          "Ensured stock availability for customers."
+        ]}
+        delay={0}
+      />
+
+      <TimelineItem
         title="MERCHANDISER"
         period="NOV 2020 - JUN 2024"
         company="CROSSMARK"
@@ -19,7 +34,7 @@ const Timeline = () => {
           "Verified product ranging and inventory in stores.",
           "Demonstrated self-motivation and strong time management while working autonomously."
         ]}
-        delay={0}
+        delay={100}
       />
       
       <TimelineItem
@@ -35,21 +50,6 @@ const Timeline = () => {
           "Responded to vendor emails and booking requests promptly.",
           "Resolved receiving issues through communication with buyers and managers.",
           "Assisted with merchandising and forklift operation on warehouse floor as needed."
-        ]}
-        delay={100}
-      />
-      
-      <TimelineItem
-        title="GROCERY TEAM MEMBER"
-        period="JUN 2023 - NOV 2024"
-        company="WOOLWORTHS LTD"
-        location="COCKBURN/SUCCESS"
-        achievements={[
-          "Enhanced customer satisfaction and experience with tailored advice.",
-          "Strengthened team collaboration to meet targets.",
-          "Improved inventory accuracy through audits.",
-          "Elevated brand visibility with creative displays.",
-          "Ensured stock availability for customers."
         ]}
         delay={200}
       />
