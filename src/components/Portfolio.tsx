@@ -13,14 +13,14 @@ const Portfolio = () => {
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItemType[]>([
     {
       id: '1',
-      image: '/lovable-uploads/c6302c70-c741-4067-8864-38474f706526.png',
+      image: '/lovable-uploads/2cfa2627-69fa-4f98-ac3d-b555a4378a0c.png',
       title: 'Artify-AI',
       description: 'A collaborative platform that empowers artistic creators by merging AI technology with an intuitive interface. Features include art generation, creative coding tutorials, collaboration tools, and NFT integration.',
       category: 'Web Development',
     },
     {
       id: '2',
-      image: '/lovable-uploads/5510da89-2afb-483c-8ac3-ee05636eaf15.png',
+      image: '/lovable-uploads/573196d4-cf4e-4da6-83d8-316c22eaffb2.png',
       title: 'Markdown Editor',
       description: 'A responsive web application for creating and previewing markdown content in real-time. Features include syntax highlighting, split-pane view, and a clean, modern interface.',
       category: 'Web Development',
