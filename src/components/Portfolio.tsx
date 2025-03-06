@@ -4,6 +4,7 @@ import { Image as ImageIcon, Plus, X } from 'lucide-react';
 import AnimatedSection from './AnimatedSection';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 type PortfolioItem = {
   id: string;
@@ -14,6 +15,7 @@ type PortfolioItem = {
 };
 
 const Portfolio = () => {
+  const { toast } = useToast();
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([
     {
       id: '1',
@@ -61,6 +63,8 @@ const Portfolio = () => {
     category: '',
     image: '',
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
 
   const categories = ['all', ...new Set(portfolioItems.map((item) => item.category))];
 
@@ -71,36 +75,70 @@ const Portfolio = () => {
   const handleUpload = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // In a real application, this would handle file upload to a service
-    // For now we'll just simulate adding the item to our state
-    if (newItem.title && newItem.description && newItem.category && newItem.image) {
-      setPortfolioItems(prev => [
-        ...prev, 
-        { ...newItem, id: newItem.id || Math.random().toString(36).substring(2, 9) } as PortfolioItem
-      ]);
-      setIsUploadModalOpen(false);
-      setNewItem({
-        id: Math.random().toString(36).substring(2, 9),
-        title: '',
-        description: '',
-        category: '',
-        image: '',
+    if (!newItem.title || !newItem.description || !newItem.category || !imageFile) {
+      toast({
+        title: "Missing information",
+        description: "Please fill all fields and select an image",
+        variant: "destructive",
       });
+      return;
     }
+
+    // In a real app, you would upload the image to a storage service
+    // and get back a URL. For this demo, we'll use a placeholder URL
+    // if there's an actual file selected
+    const imagePath = imageFile 
+      ? `https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`
+      : '';
+    
+    // Add the new item with the image URL
+    setPortfolioItems(prev => [
+      ...prev, 
+      { 
+        ...newItem, 
+        id: newItem.id || Math.random().toString(36).substring(2, 9),
+        image: imagePath 
+      } as PortfolioItem
+    ]);
+    
+    // Show success toast
+    toast({
+      title: "Project added",
+      description: "Your project has been added to the portfolio",
+    });
+    
+    // Reset form and close modal
+    setIsUploadModalOpen(false);
+    setNewItem({
+      id: Math.random().toString(36).substring(2, 9),
+      title: '',
+      description: '',
+      category: '',
+      image: '',
+    });
+    setImageFile(null);
+    setImagePreview('');
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // In a real app, you would upload to storage service
-      // For now, just create a local object URL
-      const imageUrl = URL.createObjectURL(file);
-      setNewItem({ ...newItem, image: imageUrl });
+      setImageFile(file);
+      // Create a preview for the UI
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveItem = (id: string) => {
     setPortfolioItems(prev => prev.filter(item => item.id !== id));
+    toast({
+      title: "Project removed",
+      description: "The project has been removed from your portfolio",
+    });
   };
 
   return (
@@ -134,6 +172,10 @@ const Portfolio = () => {
                     src={item.image} 
                     alt={item.title} 
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                    }}
                   />
                   <button 
                     onClick={() => handleRemoveItem(item.id)}
@@ -169,14 +211,18 @@ const Portfolio = () => {
         </AnimatedSection>
       </div>
 
-      {/* Simple modal for uploading - in a real app you might use a proper modal component */}
+      {/* Modal for uploading projects */}
       {isUploadModalOpen && (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-card border border-muted rounded-lg shadow-lg w-full max-w-md">
             <div className="flex items-center justify-between p-6 border-b border-muted">
               <h3 className="text-lg font-medium">Add New Project</h3>
               <button 
-                onClick={() => setIsUploadModalOpen(false)}
+                onClick={() => {
+                  setIsUploadModalOpen(false);
+                  setImagePreview('');
+                  setImageFile(null);
+                }}
                 className="rounded-full p-1 hover:bg-muted"
               >
                 <X size={20} />
@@ -188,18 +234,21 @@ const Portfolio = () => {
                 <label className="block text-sm font-medium mb-2">Project Image</label>
                 <div className={cn(
                   "border-2 border-dashed border-muted rounded-lg p-4 text-center",
-                  newItem.image ? "border-primary" : ""
+                  imagePreview ? "border-primary" : ""
                 )}>
-                  {newItem.image ? (
+                  {imagePreview ? (
                     <div className="relative aspect-video mb-2">
                       <img 
-                        src={newItem.image} 
+                        src={imagePreview} 
                         alt="Preview" 
                         className="w-full h-full object-cover rounded-md" 
                       />
                       <button 
                         type="button"
-                        onClick={() => setNewItem({...newItem, image: ''})}
+                        onClick={() => {
+                          setImagePreview('');
+                          setImageFile(null);
+                        }}
                         className="absolute top-2 right-2 p-1 bg-background/80 rounded-full"
                       >
                         <X size={16} className="text-destructive" />
@@ -224,7 +273,7 @@ const Portfolio = () => {
                     htmlFor="image-upload" 
                     className="mt-2 inline-block px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium cursor-pointer"
                   >
-                    {newItem.image ? 'Replace Image' : 'Select Image'}
+                    {imagePreview ? 'Replace Image' : 'Select Image'}
                   </label>
                 </div>
               </div>
@@ -269,11 +318,15 @@ const Portfolio = () => {
                 <Button 
                   type="button" 
                   variant="outline" 
-                  onClick={() => setIsUploadModalOpen(false)}
+                  onClick={() => {
+                    setIsUploadModalOpen(false);
+                    setImagePreview('');
+                    setImageFile(null);
+                  }}
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={!newItem.image || !newItem.title || !newItem.description || !newItem.category}>
+                <Button type="submit" disabled={!imageFile || !newItem.title || !newItem.description || !newItem.category}>
                   Add Project
                 </Button>
               </div>
