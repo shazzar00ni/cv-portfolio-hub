@@ -17,27 +17,34 @@ const Portfolio = () => {
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([
     {
       id: '1',
+      image: '/lovable-uploads/c6302c70-c741-4067-8864-38474f706526.png',
+      title: 'Artify-AI',
+      description: 'A collaborative platform that empowers artistic creators by merging AI technology with an intuitive interface. Features include art generation, creative coding tutorials, collaboration tools, and NFT integration.',
+      category: 'Web Development',
+    },
+    {
+      id: '2',
       image: '/lovable-uploads/5510da89-2afb-483c-8ac3-ee05636eaf15.png',
       title: 'Markdown Editor',
       description: 'A responsive web application for creating and previewing markdown content in real-time. Features include syntax highlighting, split-pane view, and a clean, modern interface.',
       category: 'Web Development',
     },
     {
-      id: '2',
+      id: '3',
       image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       title: 'Web Development Project',
       description: 'Modern responsive website built with React and Tailwind CSS.',
       category: 'Web Development',
     },
     {
-      id: '3',
+      id: '4',
       image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       title: 'Mobile App Design',
       description: 'UI/UX design for a productivity mobile application.',
       category: 'UI/UX Design',
     },
     {
-      id: '4',
+      id: '5',
       image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       title: 'Backend System',
       description: 'Robust backend architecture with Node.js and PostgreSQL.',
