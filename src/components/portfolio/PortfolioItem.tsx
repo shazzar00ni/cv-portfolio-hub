@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { X } from 'lucide-react';
 import AnimatedSection from '../AnimatedSection';
 import { PortfolioItemType } from './types';
@@ -9,6 +10,14 @@ interface PortfolioItemProps {
 }
 
 const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
+  const [imageError, setImageError] = useState(false);
+  const fallbackImage = 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+
+  const handleImageError = () => {
+    console.log(`Image failed to load: ${item.image}`);
+    setImageError(true);
+  };
+
   return (
     <AnimatedSection 
       key={item.id} 
@@ -17,13 +26,10 @@ const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
     >
       <div className="relative aspect-video">
         <img 
-          src={item.image} 
+          src={imageError ? fallbackImage : item.image} 
           alt={item.title} 
           className="w-full h-full object-cover"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
-          }}
+          onError={handleImageError}
         />
         <button 
           onClick={() => onRemove(item.id)}
