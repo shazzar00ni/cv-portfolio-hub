@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, ImageOff } from 'lucide-react';
 import AnimatedSection from '../AnimatedSection';
 import { PortfolioItemType } from './types';
 
@@ -25,12 +25,26 @@ const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
       delay={parseInt(item.id) * 100}
     >
       <div className="relative aspect-video">
-        <img 
-          src={imageError ? fallbackImage : item.image} 
-          alt={item.title} 
-          className="w-full h-full object-cover"
-          onError={handleImageError}
-        />
+        {imageError ? (
+          <div className="w-full h-full flex items-center justify-center bg-muted">
+            <div className="text-center">
+              <ImageOff className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Image unavailable</span>
+            </div>
+            <img 
+              src={fallbackImage} 
+              alt={item.title} 
+              className="absolute inset-0 w-full h-full object-cover opacity-50"
+            />
+          </div>
+        ) : (
+          <img 
+            src={item.image} 
+            alt={item.title} 
+            className="w-full h-full object-cover"
+            onError={handleImageError}
+          />
+        )}
         <button 
           onClick={() => onRemove(item.id)}
           className="absolute top-2 right-2 p-1 bg-background/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
