@@ -11,6 +11,7 @@ const NavigationMenu = () => {
     { id: 'experience', label: 'Work Experience' },
     { id: 'skills', label: 'Skills' },
     { id: 'portfolio', label: 'Portfolio' },
+    { id: 'blog', label: 'Blog' },
     { id: 'contact', label: 'Contact' },
   ];
 

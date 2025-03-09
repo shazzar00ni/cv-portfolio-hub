@@ -1,0 +1,69 @@
+
+import { ExternalLink } from 'lucide-react';
+import { BlogPostType } from './types';
+import AnimatedSection from '../AnimatedSection';
+import { formatDistanceToNow } from 'date-fns';
+import { Button } from '../ui/button';
+
+interface BlogPostProps {
+  post: BlogPostType;
+}
+
+const BlogPost = ({ post }: BlogPostProps) => {
+  const platformIcons = {
+    medium: "https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/medium.svg",
+    substack: "https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/substack.svg",
+    other: "https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/rss.svg"
+  };
+
+  const getTimeAgo = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return formatDistanceToNow(date, { addSuffix: true });
+    } catch (error) {
+      return dateString;
+    }
+  };
+
+  return (
+    <AnimatedSection delay={parseInt(post.id) * 100} className="hover-lift">
+      <div className="bg-card border rounded-lg overflow-hidden flex flex-col h-full">
+        {post.image && (
+          <div className="relative w-full aspect-[1.91/1]">
+            <img 
+              src={post.image} 
+              alt={post.title} 
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+            />
+          </div>
+        )}
+        <div className="p-5 flex flex-col flex-grow">
+          <div className="flex items-center mb-3">
+            <img 
+              src={platformIcons[post.platform]} 
+              alt={post.platform} 
+              className="w-5 h-5 mr-2 invert dark:invert-0 opacity-70"
+            />
+            <span className="text-xs text-muted-foreground">{post.platform.charAt(0).toUpperCase() + post.platform.slice(1)}</span>
+            <span className="mx-2 text-muted-foreground">•</span>
+            <span className="text-xs text-muted-foreground">{getTimeAgo(post.date)}</span>
+          </div>
+          
+          <h3 className="text-lg font-medium mb-2">{post.title}</h3>
+          <p className="text-muted-foreground text-sm mb-4 flex-grow">{post.description}</p>
+          
+          <Button asChild variant="outline" className="w-full mt-auto">
+            <a href={post.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+              Read Article <ExternalLink size={16} className="ml-2" />
+            </a>
+          </Button>
+        </div>
+      </div>
+    </AnimatedSection>
+  );
+};
+
+export default BlogPost;
