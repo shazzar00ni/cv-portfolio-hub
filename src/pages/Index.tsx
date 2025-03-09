@@ -1,6 +1,6 @@
 
 import { useEffect } from 'react';
-import Header from '@/components/Header';
+import HeaderWithThemeToggle from '@/components/HeaderWithThemeToggle';
 import NavigationMenu from '@/components/NavigationMenu';
 import About from '@/components/About';
 import Experience from '@/components/Experience';
@@ -24,7 +24,7 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <HeaderWithThemeToggle />
       <NavigationMenu />
       
       <main className="flex-grow">
