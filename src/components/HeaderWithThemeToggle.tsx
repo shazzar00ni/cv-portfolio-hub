@@ -1,6 +1,6 @@
 
 import { ThemeToggle } from "./ThemeToggle";
-import { Linkedin, Github, Mail } from "lucide-react";
+import { Linkedin, Github, Mail, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const HeaderWithThemeToggle = () => {
@@ -14,6 +14,11 @@ const HeaderWithThemeToggle = () => {
       icon: Github,
       url: "https://github.com/shazzar00ni",
       label: "GitHub"
+    },
+    {
+      icon: Instagram,
+      url: "https://www.instagram.com/shazzar00ni/",
+      label: "Instagram"
     },
     {
       icon: Mail,

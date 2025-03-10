@@ -1,4 +1,5 @@
-import { MapPin, Phone, Mail, Linkedin, Github } from 'lucide-react';
+
+import { MapPin, Phone, Mail, Linkedin, Github, Instagram } from 'lucide-react';
 import AnimatedSection from './AnimatedSection';
 
 const Contact = () => {
@@ -33,6 +34,11 @@ const Contact = () => {
       icon: Github,
       url: "https://github.com/shazzar00ni",
       label: "GitHub"
+    },
+    {
+      icon: Instagram,
+      url: "https://www.instagram.com/shazzar00ni/",
+      label: "Instagram"
     }
   ];
 
