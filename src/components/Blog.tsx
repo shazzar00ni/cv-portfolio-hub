@@ -12,6 +12,24 @@ const Blog = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPostType[]>([
     {
       id: '1',
+      title: 'From Pixels to Production: Figma's New Design-to-Code Feature',
+      description: 'Exploring how Figma's design-to-code feature is reshaping the workflow between designers and developers.',
+      url: 'https://medium.com/@shanlockett/from-pixels-to-production-figmas-new-design-to-code-feature-8f7d25e758ad',
+      platform: 'medium',
+      date: '2023-12-10T12:00:00Z',
+      image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      id: '2',
+      title: 'Unlocking Digital Flexibility: The Transformative Benefits of Headless CMS',
+      description: 'A deep dive into how headless CMS architecture provides greater flexibility and scalability for modern digital experiences.',
+      url: 'https://medium.com/@shanlockett/unlocking-digital-flexibility-the-transformative-benefits-of-headless-cms-16622a762c69',
+      platform: 'medium',
+      date: '2023-11-05T12:00:00Z',
+      image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      id: '3',
       title: 'The Future of Web Development with React and TypeScript',
       description: 'An exploration of modern web development practices and how TypeScript improves the React developer experience.',
       url: 'https://medium.com/example/future-of-web-development',
@@ -20,7 +38,7 @@ const Blog = () => {
       image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     },
     {
-      id: '2',
+      id: '4',
       title: 'Creating Accessible UI Components from Scratch',
       description: 'Learn how to build accessible, reusable UI components that work for everyone regardless of ability.',
       url: 'https://substack.com/example/accessible-ui-components',
@@ -29,7 +47,7 @@ const Blog = () => {
       image: 'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     },
     {
-      id: '3',
+      id: '5',
       title: 'My Journey as a Self-Taught Developer',
       description: 'The challenges, wins, and lessons learned from teaching myself programming and landing my first job.',
       url: 'https://medium.com/example/self-taught-developer',
