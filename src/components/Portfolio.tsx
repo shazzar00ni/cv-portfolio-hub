@@ -17,6 +17,7 @@ const Portfolio = () => {
       title: 'Artify-AI',
       description: 'A collaborative platform that empowers artistic creators by merging AI technology with an intuitive interface. Features include art generation, creative coding tutorials, collaboration tools, and NFT integration.',
       category: 'Web Development',
+      alt: 'Screenshot of Artify-AI platform showing AI-generated artwork creation interface'
     },
     {
       id: '2',
@@ -24,6 +25,7 @@ const Portfolio = () => {
       title: 'Markdown Editor',
       description: 'A responsive web application for creating and previewing markdown content in real-time. Features include syntax highlighting, split-pane view, and a clean, modern interface.',
       category: 'Web Development',
+      alt: 'Markdown Editor application interface showing code and preview panels'
     },
     {
       id: '3',
@@ -31,6 +33,7 @@ const Portfolio = () => {
       title: 'Web Development Project',
       description: 'Modern responsive website built with React and Tailwind CSS.',
       category: 'Web Development',
+      alt: 'Modern responsive website layout built with React and Tailwind CSS'
     },
     {
       id: '4',
@@ -38,6 +41,7 @@ const Portfolio = () => {
       title: 'Mobile App Design',
       description: 'UI/UX design for a productivity mobile application.',
       category: 'UI/UX Design',
+      alt: 'Mobile app interface design for productivity application'
     },
     {
       id: '5',
@@ -45,6 +49,7 @@ const Portfolio = () => {
       title: 'Backend System',
       description: 'Robust backend architecture with Node.js and PostgreSQL.',
       category: 'Backend',
+      alt: 'Visual representation of backend architecture using Node.js and PostgreSQL'
     },
   ]);
 

@@ -8,22 +8,22 @@ const HeaderWithThemeToggle = () => {
     {
       icon: Linkedin,
       url: "https://www.linkedin.com/in/shannon-lockett",
-      label: "LinkedIn"
+      label: "LinkedIn profile of Shannon Lockett"
     },
     {
       icon: Github,
       url: "https://github.com/shazzar00ni",
-      label: "GitHub"
+      label: "GitHub profile of Shannon Lockett"
     },
     {
       icon: Instagram,
       url: "https://www.instagram.com/shazzar00ni/",
-      label: "Instagram"
+      label: "Instagram profile of Shannon Lockett"
     },
     {
       icon: Mail,
       url: "mailto:shanlockett@gmail.com",
-      label: "Email"
+      label: "Send email to Shannon Lockett"
     }
   ];
 
@@ -37,7 +37,7 @@ const HeaderWithThemeToggle = () => {
             <span className="font-bold">LOCKETT</span>
           </h1>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2" aria-label="Social media links">
           {socialLinks.map((link, index) => (
             <Button
               key={index}
