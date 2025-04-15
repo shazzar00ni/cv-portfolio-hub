@@ -5,4 +5,5 @@ export type PortfolioItemType = {
   title: string;
   description: string;
   category: string;
+  alt?: string;
 };

@@ -7,4 +7,5 @@ export type BlogPostType = {
   platform: 'medium' | 'substack' | 'other';
   date: string;
   image?: string;
+  alt?: string;
 };

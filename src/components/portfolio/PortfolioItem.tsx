@@ -40,7 +40,7 @@ const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
         ) : (
           <img 
             src={item.image} 
-            alt={item.title} 
+            alt={item.alt || item.title} 
             className="w-full h-full object-cover"
             onError={handleImageError}
           />

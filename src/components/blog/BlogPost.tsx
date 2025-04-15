@@ -32,7 +32,7 @@ const BlogPost = ({ post }: BlogPostProps) => {
           <div className="relative w-full aspect-[1.91/1]">
             <img 
               src={post.image} 
-              alt={post.title} 
+              alt={post.alt || post.title} 
               className="w-full h-full object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
