@@ -12,8 +12,8 @@ const Blog = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPostType[]>([
     {
       id: '1',
-      title: 'From Pixels to Production: Figma's New Design-to-Code Feature',
-      description: 'Exploring how Figma's design-to-code feature is reshaping the workflow between designers and developers.',
+      title: "From Pixels to Production: Figma's New Design-to-Code Feature",
+      description: "Exploring how Figma's design-to-code feature is reshaping the workflow between designers and developers.",
       url: 'https://medium.com/@shanlockett/from-pixels-to-production-figmas-new-design-to-code-feature-8f7d25e758ad',
       platform: 'medium',
       date: '2023-12-10T12:00:00Z',
