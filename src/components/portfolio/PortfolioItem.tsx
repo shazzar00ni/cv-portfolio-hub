@@ -28,7 +28,7 @@ const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
         {imageError ? (
           <div className="w-full h-full flex items-center justify-center bg-muted">
             <div className="text-center">
-              <ImageOff className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+              <ImageOff className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 text-muted-foreground" />
               <span className="text-xs text-muted-foreground">Image unavailable</span>
             </div>
             <img 
@@ -47,15 +47,16 @@ const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
         )}
         <button 
           onClick={() => onRemove(item.id)}
-          className="absolute top-2 right-2 p-1 bg-background/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-2 right-2 p-1 bg-background/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity touch:opacity-70"
+          aria-label="Remove item"
         >
           <X size={16} className="text-destructive" />
         </button>
       </div>
-      <div className="p-4">
-        <h3 className="text-lg font-medium mb-2">{item.title}</h3>
-        <p className="text-muted-foreground text-sm mb-3">{item.description}</p>
-        <span className="inline-block px-3 py-1 text-xs rounded-full bg-secondary text-secondary-foreground">
+      <div className="p-3 md:p-4">
+        <h3 className="text-base md:text-lg font-medium mb-1 md:mb-2">{item.title}</h3>
+        <p className="text-muted-foreground text-xs md:text-sm mb-2 md:mb-3 line-clamp-2">{item.description}</p>
+        <span className="inline-block px-2 py-1 text-xs rounded-full bg-secondary text-secondary-foreground">
           {item.category}
         </span>
       </div>

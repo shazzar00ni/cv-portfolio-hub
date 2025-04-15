@@ -48,36 +48,36 @@ const Contact = () => {
         <AnimatedSection>
           <h2 className="section-heading">CONTACT</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
             {contactInfo.map((item, index) => (
               <AnimatedSection
                 key={index}
                 delay={item.delay}
-                className="bg-card border border-muted rounded-lg p-6 flex flex-col items-center text-center hover-lift"
+                className="bg-card border border-muted rounded-lg p-4 md:p-6 flex flex-col items-center text-center hover-lift"
               >
-                <div className="h-12 w-12 rounded-full bg-secondary flex items-center justify-center mb-4">
-                  <item.icon size={24} className="text-primary" />
+                <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-secondary flex items-center justify-center mb-3 md:mb-4">
+                  <item.icon size={20} className="text-primary" />
                 </div>
-                <h3 className="text-lg font-medium mb-2">{item.label}</h3>
-                <p className="text-muted-foreground">{item.value}</p>
+                <h3 className="text-base md:text-lg font-medium mb-1 md:mb-2">{item.label}</h3>
+                <p className="text-sm md:text-base text-muted-foreground break-words w-full">{item.value}</p>
               </AnimatedSection>
             ))}
           </div>
           
-          <div className="mt-12 flex flex-col items-center">
+          <div className="mt-8 md:mt-12 flex flex-col items-center">
             <AnimatedSection delay={300}>
-              <h3 className="text-xl font-medium mb-6 text-center">Connect With Me</h3>
-              <div className="flex justify-center gap-4">
+              <h3 className="text-xl font-medium mb-4 md:mb-6 text-center">Connect With Me</h3>
+              <div className="flex justify-center gap-3 md:gap-4">
                 {socialLinks.map((link, index) => (
                   <a
                     key={index}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="h-12 w-12 rounded-full bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-all duration-300"
+                    className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-all duration-300"
                     aria-label={link.label}
                   >
-                    <link.icon size={20} className="text-primary" />
+                    <link.icon size={18} className="text-primary" />
                   </a>
                 ))}
               </div>

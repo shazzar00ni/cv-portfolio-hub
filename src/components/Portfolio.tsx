@@ -75,7 +75,7 @@ const Portfolio = () => {
   };
 
   return (
-    <section id="portfolio" className="py-16 md:py-24">
+    <section id="portfolio" className="py-12 md:py-24">
       <div className="container-custom">
         <AnimatedSection>
           <h2 className="section-heading">PORTFOLIO</h2>
@@ -86,7 +86,7 @@ const Portfolio = () => {
             onFilterChange={setFilter}
           />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {filteredItems.map((item) => (
               <PortfolioItem 
                 key={item.id}

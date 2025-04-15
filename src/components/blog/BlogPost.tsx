@@ -40,24 +40,24 @@ const BlogPost = ({ post }: BlogPostProps) => {
             />
           </div>
         )}
-        <div className="p-5 flex flex-col flex-grow">
-          <div className="flex items-center mb-3">
+        <div className="p-3 sm:p-4 md:p-5 flex flex-col flex-grow">
+          <div className="flex items-center mb-2 md:mb-3">
             <img 
               src={platformIcons[post.platform]} 
               alt={post.platform} 
-              className="w-5 h-5 mr-2 invert dark:invert-0 opacity-70"
+              className="w-4 h-4 md:w-5 md:h-5 mr-2 invert dark:invert-0 opacity-70"
             />
             <span className="text-xs text-muted-foreground">{post.platform.charAt(0).toUpperCase() + post.platform.slice(1)}</span>
             <span className="mx-2 text-muted-foreground">•</span>
             <span className="text-xs text-muted-foreground">{getTimeAgo(post.date)}</span>
           </div>
           
-          <h3 className="text-lg font-medium mb-2">{post.title}</h3>
-          <p className="text-muted-foreground text-sm mb-4 flex-grow">{post.description}</p>
+          <h3 className="text-base md:text-lg font-medium mb-2">{post.title}</h3>
+          <p className="text-muted-foreground text-xs md:text-sm mb-4 flex-grow line-clamp-3">{post.description}</p>
           
-          <Button asChild variant="outline" className="w-full mt-auto">
+          <Button asChild variant="outline" className="w-full mt-auto text-xs md:text-sm py-1 md:py-2">
             <a href={post.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-              Read Article <ExternalLink size={16} className="ml-2" />
+              Read Article <ExternalLink size={14} className="ml-2" />
             </a>
           </Button>
         </div>

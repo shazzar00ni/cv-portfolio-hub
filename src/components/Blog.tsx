@@ -69,16 +69,16 @@ const Blog = () => {
   };
 
   return (
-    <section id="blog" className="py-16 md:py-24 border-t border-muted">
+    <section id="blog" className="py-12 md:py-24 border-t border-muted">
       <div className="container-custom">
         <AnimatedSection>
           <h2 className="section-heading">BLOG</h2>
-          <p className="text-center text-muted-foreground max-w-3xl mx-auto mb-12">
+          <p className="text-center text-muted-foreground max-w-3xl mx-auto mb-8 md:mb-12 text-sm md:text-base px-4">
             Check out my latest articles about web development, design, and technology.
             I regularly write on Medium and Substack to share my knowledge and experiences.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {blogPosts.map((post) => (
               <BlogPost key={post.id} post={post} />
             ))}

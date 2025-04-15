@@ -1,10 +1,14 @@
 
 import { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const NavigationMenu = () => {
   const [activeSection, setActiveSection] = useState('about');
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const sections = [
     { id: 'about', label: 'About Me' },
@@ -51,6 +55,8 @@ const NavigationMenu = () => {
         top: section.offsetTop - 100,
         behavior: 'smooth'
       });
+      // Close mobile menu after clicking
+      if (isMobile) setMobileMenuOpen(false);
     }
   };
 
@@ -60,26 +66,61 @@ const NavigationMenu = () => {
       scrolled ? "sticky top-0" : "relative"
     )}>
       <div className="container-custom">
-        <ul className="flex justify-center space-x-4 md:space-x-12">
-          {sections.map((section) => (
-            <li key={section.id}>
-              <button
-                onClick={() => scrollToSection(section.id)}
-                className={cn(
-                  "px-1 py-2 relative transition-all duration-300 text-sm md:text-base hover:text-primary",
-                  activeSection === section.id
-                    ? "text-primary font-medium"
-                    : "text-muted-foreground"
-                )}
+        {isMobile ? (
+          <>
+            <div className="flex justify-between items-center">
+              <span className="text-primary font-medium">Shannon Lockett</span>
+              <button 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 rounded-md hover:bg-secondary/80"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               >
-                {section.label}
-                {activeSection === section.id && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary animate-fade-in" />
-                )}
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
-            </li>
-          ))}
-        </ul>
+            </div>
+            
+            {mobileMenuOpen && (
+              <ul className="flex flex-col pt-4 pb-2 gap-4 animate-fade-in">
+                {sections.map((section) => (
+                  <li key={section.id}>
+                    <button
+                      onClick={() => scrollToSection(section.id)}
+                      className={cn(
+                        "w-full px-3 py-2 text-left rounded-md transition-all duration-300",
+                        activeSection === section.id
+                          ? "bg-primary/10 text-primary font-medium"
+                          : "text-muted-foreground hover:bg-secondary/50"
+                      )}
+                    >
+                      {section.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        ) : (
+          <ul className="flex justify-center space-x-4 md:space-x-12">
+            {sections.map((section) => (
+              <li key={section.id}>
+                <button
+                  onClick={() => scrollToSection(section.id)}
+                  className={cn(
+                    "px-1 py-2 relative transition-all duration-300 text-sm md:text-base hover:text-primary",
+                    activeSection === section.id
+                      ? "text-primary font-medium"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {section.label}
+                  {activeSection === section.id && (
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary animate-fade-in" />
+                  )}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </nav>
   );

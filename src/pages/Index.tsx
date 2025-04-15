@@ -17,8 +17,15 @@ const Index = () => {
     // Add smooth scrolling to the page
     document.documentElement.style.scrollBehavior = 'smooth';
     
+    // Add viewport meta tag for mobile responsiveness
+    const meta = document.createElement('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+    document.getElementsByTagName('head')[0].appendChild(meta);
+    
     return () => {
       document.documentElement.style.scrollBehavior = 'auto';
+      // We don't remove the meta tag on cleanup as it should persist
     };
   }, []);
 
@@ -36,7 +43,7 @@ const Index = () => {
         <Contact />
       </main>
       
-      <footer className="py-8 text-center text-sm text-muted-foreground border-t border-muted">
+      <footer className="py-6 md:py-8 text-center text-xs md:text-sm text-muted-foreground border-t border-muted">
         <div className="container-custom">
           <p>© {new Date().getFullYear()} Shannon Lockett. All rights reserved.</p>
         </div>

@@ -77,10 +77,20 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading tracking-tight;
+  }
+  
+  /* Make text more readable on small screens */
+  @media (max-width: 640px) {
+    html {
+      font-size: 14px;
+    }
   }
 }
 
@@ -127,4 +137,32 @@
 .hover-lift:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .container-custom {
+    @apply px-3;
+  }
+  
+  .section-heading {
+    @apply text-lg mb-4;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .hover-lift:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .hover-lift:active {
+    transform: translateY(-2px);
+    transition: transform 0.1s ease;
+  }
 }
