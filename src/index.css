@@ -5,70 +5,57 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme variables */
 @layer base {
   :root {
+    /* Light mode */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
-
     --card: 0 0% 98%;
     --card-foreground: 240 10% 3.9%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-
     --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
-
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
-
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
-
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 5.9% 10%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
-
     --radius: 0.5rem;
   }
 
   .dark {
+    /* Dark mode */
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
-
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
-
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
-
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
   }
 }
 
+/* Base styles */
 @layer base {
   * {
     @apply border-border;
@@ -86,7 +73,7 @@
     @apply font-heading tracking-tight;
   }
   
-  /* Make text more readable on small screens */
+  /* Mobile text optimization */
   @media (max-width: 640px) {
     html {
       font-size: 14px;
@@ -94,6 +81,7 @@
   }
 }
 
+/* Timeline components */
 .timeline-connector {
   @apply absolute left-4 top-0 h-full w-0.5 bg-muted;
 }
@@ -102,6 +90,7 @@
   @apply absolute left-4 top-1.5 h-2 w-2 -translate-x-1/2 rounded-full bg-primary;
 }
 
+/* Section headings */
 .section-heading {
   @apply relative uppercase text-xl font-semibold tracking-widest mb-6 inline-block;
 }
@@ -111,10 +100,12 @@
   @apply absolute bottom-0 left-0 w-full h-0.5 bg-muted;
 }
 
+/* Container and layout */
 .container-custom {
   @apply max-w-6xl mx-auto px-4 md:px-6 lg:px-8;
 }
 
+/* Animation effects */
 .scroll-effect {
   opacity: 0;
   transform: translateY(20px);
@@ -126,6 +117,7 @@
   transform: translateY(0);
 }
 
+/* Visual effects */
 .glassmorphism {
   @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg dark:bg-black/10 dark:border-white/10;
 }
@@ -139,7 +131,7 @@
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 }
 
-/* Mobile optimizations */
+/* Responsive adjustments */
 @media (max-width: 640px) {
   .container-custom {
     @apply px-3;

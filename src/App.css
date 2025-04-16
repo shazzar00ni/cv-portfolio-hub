@@ -1,4 +1,5 @@
 
+/* Root container styling */
 #root {
   max-width: 100%;
   margin: 0 auto;
@@ -12,6 +13,7 @@
   }
 }
 
+/* Logo animations and styling */
 .logo {
   height: 5em;
   padding: 1em;
@@ -49,6 +51,7 @@
   }
 }
 
+/* Card and documentation elements */
 .card {
   padding: 1em;
 }
@@ -63,7 +66,7 @@
   color: #888;
 }
 
-/* Progressive image loading */
+/* Image loading and effects */
 img {
   transition: opacity 0.3s ease-in-out;
 }
@@ -76,7 +79,7 @@ img.loaded, img:not([loading="lazy"]) {
   opacity: 1;
 }
 
-/* Blur-up effect for images */
+/* Blur-up image effect */
 .image-blur-wrapper {
   position: relative;
   overflow: hidden;
@@ -99,7 +102,7 @@ img.loaded, img:not([loading="lazy"]) {
   opacity: 0;
 }
 
-/* Add loading state styles */
+/* Loading animations */
 .loading-skeleton {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
