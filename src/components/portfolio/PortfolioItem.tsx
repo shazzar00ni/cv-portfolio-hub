@@ -1,8 +1,8 @@
 
-import { useState } from 'react';
-import { X, ImageOff } from 'lucide-react';
+import { X } from 'lucide-react';
 import AnimatedSection from '../AnimatedSection';
 import { PortfolioItemType } from './types';
+import { OptimizedImage } from '../ui/optimized-image';
 
 interface PortfolioItemProps {
   item: PortfolioItemType;
@@ -10,19 +10,6 @@ interface PortfolioItemProps {
 }
 
 const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
-  const [imageError, setImageError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const fallbackImage = 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
-
-  const handleImageError = () => {
-    console.log(`Image failed to load: ${item.image}`);
-    setImageError(true);
-  };
-
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-  };
-
   return (
     <AnimatedSection 
       key={item.id} 
@@ -30,40 +17,15 @@ const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
       delay={parseInt(item.id) * 100}
     >
       <div className="relative aspect-video">
-        {imageError ? (
-          <div className="w-full h-full flex items-center justify-center bg-muted">
-            <div className="text-center">
-              <ImageOff className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Image unavailable</span>
-            </div>
-            <img 
-              src={fallbackImage} 
-              alt={item.title} 
-              className="absolute inset-0 w-full h-full object-cover opacity-50"
-              loading="lazy"
-              decoding="async"
-              width="400"
-              height="225"
-            />
-          </div>
-        ) : (
-          <div className="image-blur-wrapper">
-            {!imageLoaded && (
-              <div className="w-full h-full loading-skeleton absolute inset-0" />
-            )}
-            <img 
-              src={`${item.image}?w=400&q=75&auto=format`}
-              alt={item.alt || item.title} 
-              className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-              onError={handleImageError}
-              onLoad={handleImageLoad}
-              loading="lazy"
-              decoding="async"
-              width="400"
-              height="225"
-            />
-          </div>
-        )}
+        <OptimizedImage 
+          src={item.image || ''}
+          alt={item.alt || item.title} 
+          width={400}
+          height={225}
+          className="w-full h-full"
+          showFallbackOnError={true}
+        />
+        
         <button 
           onClick={() => onRemove(item.id)}
           className="absolute top-2 right-2 p-1 bg-background/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity touch:opacity-70"
