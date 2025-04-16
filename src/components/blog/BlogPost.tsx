@@ -34,6 +34,8 @@ const BlogPost = ({ post }: BlogPostProps) => {
               src={post.image} 
               alt={post.alt || post.title} 
               className="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
               }}
@@ -46,6 +48,9 @@ const BlogPost = ({ post }: BlogPostProps) => {
               src={platformIcons[post.platform]} 
               alt={post.platform} 
               className="w-4 h-4 md:w-5 md:h-5 mr-2 invert dark:invert-0 opacity-70"
+              loading="lazy"
+              width="20"
+              height="20"
             />
             <span className="text-xs text-muted-foreground">{post.platform.charAt(0).toUpperCase() + post.platform.slice(1)}</span>
             <span className="mx-2 text-muted-foreground">•</span>

@@ -23,6 +23,54 @@ const Index = () => {
     meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
     document.getElementsByTagName('head')[0].appendChild(meta);
     
+    // Enable native lazy loading for browsers that support it
+    // and add intersection observer fallback for older browsers
+    if ('loading' in HTMLImageElement.prototype) {
+      console.log('Native lazy loading supported');
+      // Browser supports lazy loading natively, already handled with loading="lazy" attributes
+    } else {
+      console.log('Native lazy loading not supported, using IntersectionObserver');
+      // Use IntersectionObserver as fallback for browsers that don't support lazy loading
+      const lazyImages = document.querySelectorAll('img:not([loading])');
+      
+      if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const lazyImage = entry.target as HTMLImageElement;
+              if (lazyImage.dataset.src) {
+                lazyImage.src = lazyImage.dataset.src;
+                lazyImage.removeAttribute('data-src');
+              }
+              imageObserver.unobserve(lazyImage);
+            }
+          });
+        });
+        
+        lazyImages.forEach((lazyImage) => {
+          // Store the original src in data-src and remove src to prevent loading
+          const img = lazyImage as HTMLImageElement;
+          if (img.src && !img.dataset.src) {
+            img.dataset.src = img.src;
+            img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='; // Tiny transparent gif
+            imageObserver.observe(img);
+          }
+        });
+      }
+    }
+    
+    // Add preconnect hints for external resources
+    const addPreconnect = (url: string) => {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = url;
+      document.head.appendChild(link);
+    };
+    
+    // Add preconnects for commonly used external resources
+    addPreconnect('https://images.unsplash.com');
+    addPreconnect('https://cdn.jsdelivr.net');
+    
     return () => {
       document.documentElement.style.scrollBehavior = 'auto';
       // We don't remove the meta tag on cleanup as it should persist

@@ -35,6 +35,8 @@ const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
               src={fallbackImage} 
               alt={item.title} 
               className="absolute inset-0 w-full h-full object-cover opacity-50"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         ) : (
@@ -43,6 +45,8 @@ const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
             alt={item.alt || item.title} 
             className="w-full h-full object-cover"
             onError={handleImageError}
+            loading="lazy"
+            decoding="async"
           />
         )}
         <button 
