@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { PortfolioItemType } from './types';
+import { supabase } from '@/integrations/supabase/client';
 
 interface PortfolioUploadModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ const PortfolioUploadModal = ({ isOpen, onClose, onAddItem }: PortfolioUploadMod
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -37,40 +39,78 @@ const PortfolioUploadModal = ({ isOpen, onClose, onAddItem }: PortfolioUploadMod
     }
   };
 
-  const handleUpload = (e: React.FormEvent) => {
+  const uploadImage = async (file: File): Promise<string> => {
+    try {
+      // Generate a unique file name
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+      const filePath = `portfolio/${fileName}`;
+
+      // Upload the file to Supabase Storage (fallback to a public URL if upload fails)
+      const { error } = await supabase.storage
+        .from('portfolio')
+        .upload(filePath, file);
+
+      if (error) {
+        console.error("Storage upload error:", error);
+        throw error;
+      }
+
+      // Get the public URL
+      const { data } = supabase.storage.from('portfolio').getPublicUrl(filePath);
+      return data.publicUrl;
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      return ''; // Return empty string if upload fails
+    }
+  };
+
+  const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!newItem.title || !newItem.description || !newItem.category || !imageFile) {
+    if (!newItem.title || !newItem.description || !newItem.category) {
       toast({
         title: "Missing information",
-        description: "Please fill all fields and select an image",
+        description: "Please fill all fields",
         variant: "destructive",
       });
       return;
     }
 
-    // In a real app, you would upload the image to a storage service
-    // and get back a URL. For this demo, we'll use a placeholder URL
-    // if there's an actual file selected
-    const imagePath = imageFile 
-      ? `https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`
-      : '';
+    setIsUploading(true);
+
+    try {
+      // If image file exists, try to upload it
+      let imagePath = '';
+      if (imageFile) {
+        imagePath = await uploadImage(imageFile);
+      }
+
+      // Use fallback image if upload failed or no image was selected
+      if (!imagePath) {
+        imagePath = 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+      }
     
-    // Add the new item with the image URL
-    onAddItem({ 
-      ...newItem, 
-      id: newItem.id || Math.random().toString(36).substring(2, 9),
-      image: imagePath 
-    } as PortfolioItemType);
+      // Add the new item with the image URL
+      onAddItem({ 
+        ...newItem, 
+        id: newItem.id || Math.random().toString(36).substring(2, 9),
+        image: imagePath,
+        alt: `Image for ${newItem.title}`
+      } as PortfolioItemType);
     
-    // Show success toast
-    toast({
-      title: "Project added",
-      description: "Your project has been added to the portfolio",
-    });
-    
-    // Reset form and close modal
-    resetFormAndClose();
+      // Reset form and close modal
+      resetFormAndClose();
+    } catch (error) {
+      console.error("Error in handleUpload:", error);
+      toast({
+        title: "Upload failed",
+        description: "There was a problem uploading your project",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const resetFormAndClose = () => {
@@ -194,8 +234,11 @@ const PortfolioUploadModal = ({ isOpen, onClose, onAddItem }: PortfolioUploadMod
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={!imageFile || !newItem.title || !newItem.description || !newItem.category}>
-              Add Project
+            <Button 
+              type="submit" 
+              disabled={isUploading || !newItem.title || !newItem.description || !newItem.category}
+            >
+              {isUploading ? 'Uploading...' : 'Add Project'}
             </Button>
           </div>
         </form>

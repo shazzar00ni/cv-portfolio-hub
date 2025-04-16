@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AnimatedSection from './AnimatedSection';
 import { useToast } from '@/hooks/use-toast';
 import { PortfolioItemType } from './portfolio/types';
@@ -7,71 +7,162 @@ import PortfolioItem from './portfolio/PortfolioItem';
 import AddPortfolioItem from './portfolio/AddPortfolioItem';
 import PortfolioUploadModal from './portfolio/PortfolioUploadModal';
 import PortfolioFilter from './portfolio/PortfolioFilter';
+import { supabase } from "@/integrations/supabase/client";
 
 const Portfolio = () => {
   const { toast } = useToast();
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItemType[]>([
-    {
-      id: '1',
-      image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      title: 'Artify-AI',
-      description: 'A collaborative platform that empowers artistic creators by merging AI technology with an intuitive interface. Features include art generation, creative coding tutorials, collaboration tools, and NFT integration.',
-      category: 'Web Development',
-      alt: 'Screenshot of Artify-AI platform showing AI-generated artwork creation interface'
-    },
-    {
-      id: '2',
-      image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      title: 'Markdown Editor',
-      description: 'A responsive web application for creating and previewing markdown content in real-time. Features include syntax highlighting, split-pane view, and a clean, modern interface.',
-      category: 'Web Development',
-      alt: 'Markdown Editor application interface showing code and preview panels'
-    },
-    {
-      id: '3',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      title: 'Web Development Project',
-      description: 'Modern responsive website built with React and Tailwind CSS.',
-      category: 'Web Development',
-      alt: 'Modern responsive website layout built with React and Tailwind CSS'
-    },
-    {
-      id: '4',
-      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      title: 'Mobile App Design',
-      description: 'UI/UX design for a productivity mobile application.',
-      category: 'UI/UX Design',
-      alt: 'Mobile app interface design for productivity application'
-    },
-    {
-      id: '5',
-      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      title: 'Backend System',
-      description: 'Robust backend architecture with Node.js and PostgreSQL.',
-      category: 'Backend',
-      alt: 'Visual representation of backend architecture using Node.js and PostgreSQL'
-    },
-  ]);
-
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItemType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [categories, setCategories] = useState<string[]>(['all']);
 
-  const categories = ['all', ...new Set(portfolioItems.map((item) => item.category))];
+  // Fetch portfolio items from Supabase
+  useEffect(() => {
+    const fetchPortfolioItems = async () => {
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from('portfolio_items')
+          .select('*');
+
+        if (error) {
+          console.error('Error fetching portfolio items:', error);
+          toast({
+            title: "Failed to load portfolio",
+            description: error.message,
+            variant: "destructive",
+          });
+          return;
+        }
+
+        // Transform Supabase data to match PortfolioItemType
+        const items: PortfolioItemType[] = data.map(item => ({
+          id: item.id,
+          title: item.title,
+          description: item.description || '',
+          category: item.category || 'Uncategorized',
+          image: item.image_url || 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+          alt: `Screenshot of ${item.title}`
+        }));
+
+        setPortfolioItems(items);
+        
+        // Extract unique categories
+        const uniqueCategories = ['all', ...new Set(items.map(item => item.category))];
+        setCategories(uniqueCategories);
+      } catch (error) {
+        console.error('Error in fetchPortfolioItems:', error);
+        toast({
+          title: "Something went wrong",
+          description: "Could not load portfolio items",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPortfolioItems();
+  }, [toast]);
 
   const filteredItems = filter === 'all' 
     ? portfolioItems 
     : portfolioItems.filter(item => item.category === filter);
 
-  const handleAddItem = (item: PortfolioItemType) => {
-    setPortfolioItems(prev => [...prev, item]);
+  const handleAddItem = async (item: PortfolioItemType) => {
+    try {
+      // Add item to Supabase
+      const { data, error } = await supabase
+        .from('portfolio_items')
+        .insert({
+          title: item.title,
+          description: item.description,
+          category: item.category,
+          image_url: item.image,
+          user_id: (await supabase.auth.getUser()).data.user?.id
+        })
+        .select();
+
+      if (error) {
+        console.error('Error adding portfolio item:', error);
+        toast({
+          title: "Failed to add project",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Transform returned data to match PortfolioItemType
+      const newItem: PortfolioItemType = {
+        id: data[0].id,
+        title: data[0].title,
+        description: data[0].description || '',
+        category: data[0].category || 'Uncategorized',
+        image: data[0].image_url || 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        alt: `Screenshot of ${data[0].title}`
+      };
+
+      setPortfolioItems(prev => [...prev, newItem]);
+      
+      // Update categories if new category was added
+      if (!categories.includes(newItem.category) && newItem.category !== '') {
+        setCategories(prev => [...prev, newItem.category]);
+      }
+
+      toast({
+        title: "Project added",
+        description: "Your project has been added to your portfolio",
+      });
+    } catch (error) {
+      console.error('Error in handleAddItem:', error);
+      toast({
+        title: "Something went wrong",
+        description: "Could not add portfolio item",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleRemoveItem = (id: string) => {
-    setPortfolioItems(prev => prev.filter(item => item.id !== id));
-    toast({
-      title: "Project removed",
-      description: "The project has been removed from your portfolio",
-    });
+  const handleRemoveItem = async (id: string) => {
+    try {
+      // Remove item from Supabase
+      const { error } = await supabase
+        .from('portfolio_items')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error removing portfolio item:', error);
+        toast({
+          title: "Failed to remove project",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Remove item from state
+      setPortfolioItems(prev => prev.filter(item => item.id !== id));
+      
+      toast({
+        title: "Project removed",
+        description: "The project has been removed from your portfolio",
+      });
+      
+      // Update categories if needed
+      const updatedItems = portfolioItems.filter(item => item.id !== id);
+      const updatedCategories = ['all', ...new Set(updatedItems.map(item => item.category))];
+      setCategories(updatedCategories);
+    } catch (error) {
+      console.error('Error in handleRemoveItem:', error);
+      toast({
+        title: "Something went wrong",
+        description: "Could not remove portfolio item",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -87,15 +178,28 @@ const Portfolio = () => {
           />
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {filteredItems.map((item) => (
-              <PortfolioItem 
-                key={item.id}
-                item={item} 
-                onRemove={handleRemoveItem} 
-              />
-            ))}
-            
-            <AddPortfolioItem onClick={() => setIsUploadModalOpen(true)} />
+            {isLoading ? (
+              // Loading state
+              Array.from({ length: 3 }).map((_, index) => (
+                <div 
+                  key={`skeleton-${index}`} 
+                  className="bg-card/30 border border-muted rounded-lg overflow-hidden h-[280px] animate-pulse"
+                />
+              ))
+            ) : (
+              // Render portfolio items
+              <>
+                {filteredItems.map((item) => (
+                  <PortfolioItem 
+                    key={item.id}
+                    item={item} 
+                    onRemove={handleRemoveItem} 
+                  />
+                ))}
+                
+                <AddPortfolioItem onClick={() => setIsUploadModalOpen(true)} />
+              </>
+            )}
           </div>
         </AnimatedSection>
       </div>

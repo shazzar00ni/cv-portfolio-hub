@@ -1,5 +1,6 @@
 
 import { useEffect } from 'react';
+import { Session } from '@supabase/supabase-js';
 import HeaderWithThemeToggle from '@/components/HeaderWithThemeToggle';
 import NavigationMenu from '@/components/NavigationMenu';
 import About from '@/components/About';
@@ -10,7 +11,11 @@ import Blog from '@/components/Blog';
 import Contact from '@/components/Contact';
 import { useResourceOptimization } from '@/hooks/use-resource-optimization';
 
-const Index = () => {
+interface IndexProps {
+  session?: Session | null;
+}
+
+const Index = ({ session }: IndexProps) => {
   // Common resources to optimize
   useResourceOptimization({
     preconnectUrls: [
@@ -56,6 +61,15 @@ const Index = () => {
       <footer className="py-6 md:py-8 text-center text-xs md:text-sm text-muted-foreground border-t border-muted">
         <div className="container-custom">
           <p>© {new Date().getFullYear()} Shannon Lockett. All rights reserved.</p>
+          {session ? (
+            <p className="text-xs text-muted-foreground mt-1">
+              Logged in as: {session.user?.email}
+            </p>
+          ) : (
+            <p className="text-xs text-muted-foreground mt-1">
+              Not logged in
+            </p>
+          )}
         </div>
       </footer>
     </div>
