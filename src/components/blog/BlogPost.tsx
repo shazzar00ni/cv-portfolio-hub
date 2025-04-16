@@ -4,12 +4,15 @@ import { BlogPostType } from './types';
 import AnimatedSection from '../AnimatedSection';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '../ui/button';
+import { useState } from 'react';
 
 interface BlogPostProps {
   post: BlogPostType;
 }
 
 const BlogPost = ({ post }: BlogPostProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  
   const platformIcons = {
     medium: "https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/medium.svg",
     substack: "https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/substack.svg",
@@ -25,17 +28,27 @@ const BlogPost = ({ post }: BlogPostProps) => {
     }
   };
 
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
+
   return (
     <AnimatedSection delay={parseInt(post.id) * 100} className="hover-lift">
       <div className="bg-card border rounded-lg overflow-hidden flex flex-col h-full">
         {post.image && (
           <div className="relative w-full aspect-[1.91/1]">
+            {!imageLoaded && (
+              <div className="w-full h-full loading-skeleton absolute inset-0" />
+            )}
             <img 
-              src={post.image} 
+              src={`${post.image}?w=400&q=75&auto=format`}
               alt={post.alt || post.title} 
-              className="w-full h-full object-cover"
+              className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               loading="lazy"
               decoding="async"
+              width="400"
+              height="210"
+              onLoad={handleImageLoad}
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
               }}

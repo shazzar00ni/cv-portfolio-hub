@@ -11,11 +11,16 @@ interface PortfolioItemProps {
 
 const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
   const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const fallbackImage = 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
 
   const handleImageError = () => {
     console.log(`Image failed to load: ${item.image}`);
     setImageError(true);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
   };
 
   return (
@@ -37,17 +42,27 @@ const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
               className="absolute inset-0 w-full h-full object-cover opacity-50"
               loading="lazy"
               decoding="async"
+              width="400"
+              height="225"
             />
           </div>
         ) : (
-          <img 
-            src={item.image} 
-            alt={item.alt || item.title} 
-            className="w-full h-full object-cover"
-            onError={handleImageError}
-            loading="lazy"
-            decoding="async"
-          />
+          <div className="image-blur-wrapper">
+            {!imageLoaded && (
+              <div className="w-full h-full loading-skeleton absolute inset-0" />
+            )}
+            <img 
+              src={`${item.image}?w=400&q=75&auto=format`}
+              alt={item.alt || item.title} 
+              className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              onError={handleImageError}
+              onLoad={handleImageLoad}
+              loading="lazy"
+              decoding="async"
+              width="400"
+              height="225"
+            />
+          </div>
         )}
         <button 
           onClick={() => onRemove(item.id)}

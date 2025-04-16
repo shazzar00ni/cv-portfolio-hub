@@ -40,6 +40,7 @@ const Index = () => {
               const lazyImage = entry.target as HTMLImageElement;
               if (lazyImage.dataset.src) {
                 lazyImage.src = lazyImage.dataset.src;
+                lazyImage.classList.add('loaded');
                 lazyImage.removeAttribute('data-src');
               }
               imageObserver.unobserve(lazyImage);
@@ -59,6 +60,23 @@ const Index = () => {
       }
     }
     
+    // Detect which images have already loaded
+    const markLoadedImages = () => {
+      document.querySelectorAll('img').forEach(img => {
+        if (img.complete) {
+          img.classList.add('loaded');
+        } else {
+          img.addEventListener('load', () => {
+            img.classList.add('loaded');
+          });
+        }
+      });
+    };
+    
+    // Run once and also after window load
+    markLoadedImages();
+    window.addEventListener('load', markLoadedImages);
+    
     // Add preconnect hints for external resources
     const addPreconnect = (url: string) => {
       const link = document.createElement('link');
@@ -67,12 +85,23 @@ const Index = () => {
       document.head.appendChild(link);
     };
     
-    // Add preconnects for commonly used external resources
+    // Add DNS-prefetch for commonly used domains
+    const addDnsPrefetch = (url: string) => {
+      const link = document.createElement('link');
+      link.rel = 'dns-prefetch';
+      link.href = url;
+      document.head.appendChild(link);
+    };
+    
+    // Add preconnects and dns-prefetch for commonly used external resources
     addPreconnect('https://images.unsplash.com');
+    addDnsPrefetch('https://images.unsplash.com');
     addPreconnect('https://cdn.jsdelivr.net');
+    addDnsPrefetch('https://cdn.jsdelivr.net');
     
     return () => {
       document.documentElement.style.scrollBehavior = 'auto';
+      window.removeEventListener('load', markLoadedImages);
       // We don't remove the meta tag on cleanup as it should persist
     };
   }, []);
