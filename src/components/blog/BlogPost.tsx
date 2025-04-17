@@ -24,7 +24,7 @@ const BlogPost = ({ post }: BlogPostProps) => {
 
   return (
     <AnimatedSection delay={parseInt(post.id) * 100} className="hover-lift">
-      <div className="bg-card border rounded-lg overflow-hidden flex flex-col h-full">
+      <article className="bg-card border rounded-lg overflow-hidden flex flex-col h-full" role="article" aria-labelledby={`blog-title-${post.id}`}>
         {post.image && (
           <div className="relative w-full aspect-[1.91/1]">
             <OptimizedImage 
@@ -47,20 +47,26 @@ const BlogPost = ({ post }: BlogPostProps) => {
               height="20"
             />
             <span className="text-xs text-muted-foreground">{post.platform.charAt(0).toUpperCase() + post.platform.slice(1)}</span>
-            <span className="mx-2 text-muted-foreground">•</span>
-            <span className="text-xs text-muted-foreground">{getTimeAgo(post.date)}</span>
+            <span className="mx-2 text-muted-foreground" aria-hidden="true">•</span>
+            <time className="text-xs text-muted-foreground" dateTime={post.date}>{getTimeAgo(post.date)}</time>
           </div>
           
-          <h3 className="text-base md:text-lg font-medium mb-2">{post.title}</h3>
+          <h3 id={`blog-title-${post.id}`} className="text-base md:text-lg font-medium mb-2">{post.title}</h3>
           <p className="text-muted-foreground text-xs md:text-sm mb-4 flex-grow line-clamp-3">{post.description}</p>
           
           <Button asChild variant="outline" className="w-full mt-auto text-xs md:text-sm py-1 md:py-2">
-            <a href={post.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-              Read Article <ExternalLink size={14} className="ml-2" />
+            <a 
+              href={post.url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center justify-center"
+              aria-label={`Read article: ${post.title}`}
+            >
+              Read Article <ExternalLink size={14} className="ml-2" aria-hidden="true" />
             </a>
           </Button>
         </div>
-      </div>
+      </article>
     </AnimatedSection>
   );
 };

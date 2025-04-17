@@ -16,7 +16,7 @@ export function AddItemCard({
   onClick,
   title = "Add New Item",
   subtitle,
-  icon = <Plus className="h-8 w-8 mb-2 text-muted-foreground" />,
+  icon = <Plus className="h-8 w-8 mb-2 text-muted-foreground" aria-hidden="true" />,
   className,
   delay = 100
 }: AddItemCardProps) {
@@ -28,6 +28,8 @@ export function AddItemCard({
           "bg-muted/50 border border-dashed border-muted-foreground/30 rounded-lg w-full h-full min-h-[200px] flex flex-col items-center justify-center p-6 transition-colors hover:bg-muted/80",
           className
         )}
+        role="button"
+        aria-label={title}
       >
         {icon}
         <span className="text-muted-foreground font-medium">{title}</span>

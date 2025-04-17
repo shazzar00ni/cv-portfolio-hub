@@ -43,10 +43,10 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="py-16 md:py-24 bg-secondary/50">
+    <section id="contact" className="py-16 md:py-24 bg-secondary/50" role="region" aria-labelledby="contact-heading">
       <div className="container-custom">
         <AnimatedSection>
-          <h2 className="section-heading">CONTACT</h2>
+          <h2 id="contact-heading" className="section-heading">CONTACT</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
             {contactInfo.map((item, index) => (
@@ -54,20 +54,30 @@ const Contact = () => {
                 key={index}
                 delay={item.delay}
                 className="bg-card border border-muted rounded-lg p-4 md:p-6 flex flex-col items-center text-center hover-lift"
+                role="group"
+                aria-labelledby={`contact-method-${index}`}
               >
                 <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-secondary flex items-center justify-center mb-3 md:mb-4">
-                  <item.icon size={20} className="text-primary" />
+                  <item.icon size={20} className="text-primary" aria-hidden="true" />
                 </div>
-                <h3 className="text-base md:text-lg font-medium mb-1 md:mb-2">{item.label}</h3>
-                <p className="text-sm md:text-base text-muted-foreground break-words w-full">{item.value}</p>
+                <h3 id={`contact-method-${index}`} className="text-base md:text-lg font-medium mb-1 md:mb-2">{item.label}</h3>
+                <p className="text-sm md:text-base text-muted-foreground break-words w-full">
+                  {item.label === "Email" ? (
+                    <a href={`mailto:${item.value}`} aria-label={`Email address: ${item.value}`}>{item.value}</a>
+                  ) : item.label === "Phone" ? (
+                    <a href={`tel:${item.value}`} aria-label={`Phone number: ${item.value}`}>{item.value}</a>
+                  ) : (
+                    item.value
+                  )}
+                </p>
               </AnimatedSection>
             ))}
           </div>
           
           <div className="mt-8 md:mt-12 flex flex-col items-center">
             <AnimatedSection delay={300}>
-              <h3 className="text-xl font-medium mb-4 md:mb-6 text-center">Connect With Me</h3>
-              <div className="flex justify-center gap-3 md:gap-4">
+              <h3 id="social-heading" className="text-xl font-medium mb-4 md:mb-6 text-center">Connect With Me</h3>
+              <div className="flex justify-center gap-3 md:gap-4" role="navigation" aria-labelledby="social-heading">
                 {socialLinks.map((link, index) => (
                   <a
                     key={index}
@@ -77,7 +87,7 @@ const Contact = () => {
                     className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-all duration-300"
                     aria-label={link.label}
                   >
-                    <link.icon size={18} className="text-primary" />
+                    <link.icon size={18} className="text-primary" aria-hidden="true" />
                   </a>
                 ))}
               </div>
