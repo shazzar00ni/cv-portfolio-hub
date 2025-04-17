@@ -17,6 +17,11 @@ const BlogPost = ({ post }: BlogPostProps) => {
     other: "https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/rss.svg"
   };
 
+  // Get a descriptive alt text for the platform icon
+  const getPlatformIconAlt = (platform: string) => {
+    return `${platform.charAt(0).toUpperCase() + platform.slice(1)} platform icon`;
+  };
+
   return (
     <AnimatedSection delay={parseInt(post.id) * 100} className="hover-lift">
       <div className="bg-card border rounded-lg overflow-hidden flex flex-col h-full">
@@ -35,7 +40,7 @@ const BlogPost = ({ post }: BlogPostProps) => {
           <div className="flex items-center mb-2 md:mb-3">
             <img 
               src={platformIcons[post.platform]} 
-              alt={post.platform} 
+              alt={getPlatformIconAlt(post.platform)} 
               className="w-4 h-4 md:w-5 md:h-5 mr-2 invert dark:invert-0 opacity-70"
               loading="lazy"
               width="20"
