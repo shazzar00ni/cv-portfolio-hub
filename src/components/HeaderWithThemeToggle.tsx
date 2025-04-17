@@ -2,8 +2,30 @@
 import { ThemeToggle } from "./ThemeToggle";
 import { Linkedin, Github, Mail, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import UserMenu from "./UserMenu";
+import { useEffect, useState } from "react";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 
 const HeaderWithThemeToggle = () => {
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   const socialLinks = [
     {
       icon: Linkedin,
@@ -57,6 +79,7 @@ const HeaderWithThemeToggle = () => {
             </Button>
           ))}
           <ThemeToggle />
+          <UserMenu session={session} />
         </div>
       </div>
     </header>
