@@ -6,14 +6,23 @@ interface AnimatedSectionProps {
   children: React.ReactNode;
   className?: string;
   delay?: number;
-  onClick?: () => void; // Add onClick handler to props
+  onClick?: () => void;
+  // Add ARIA attributes
+  role?: string;
+  'aria-labelledby'?: string;
+  'aria-label'?: string;
+  'aria-hidden'?: boolean;
 }
 
 const AnimatedSection: React.FC<AnimatedSectionProps> = ({ 
   children, 
   className, 
   delay = 0,
-  onClick // Add onClick to the component props
+  onClick,
+  role,
+  'aria-labelledby': ariaLabelledby,
+  'aria-label': ariaLabel,
+  'aria-hidden': ariaHidden,
 }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -53,7 +62,11 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
         className
       )}
       style={{ transitionDelay: `${delay}ms` }}
-      onClick={onClick} // Apply the onClick handler
+      onClick={onClick}
+      role={role}
+      aria-labelledby={ariaLabelledby}
+      aria-label={ariaLabel}
+      aria-hidden={ariaHidden}
     >
       {children}
     </div>
