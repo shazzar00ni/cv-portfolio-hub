@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import { ThemeProvider } from "./hooks/use-theme";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -50,6 +52,12 @@ const App = () => {
               <Route path="/" element={<Index session={session} />} />
               <Route path="/auth" element={
                 session ? <Navigate to="/" replace /> : <Auth />
+              } />
+              <Route path="/profile" element={
+                session ? <Profile /> : <Navigate to="/auth" replace />
+              } />
+              <Route path="/settings" element={
+                session ? <Settings /> : <Navigate to="/auth" replace />
               } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

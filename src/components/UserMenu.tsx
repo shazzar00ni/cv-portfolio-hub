@@ -33,23 +33,27 @@ const UserMenu = ({ session }: UserMenuProps) => {
       
       // Fetch user profile if needed
       const fetchProfile = async () => {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('avatar_url, full_name')
-          .eq('id', session.user.id)
-          .single();
-        
-        if (data && !error) {
-          setAvatarUrl(data.avatar_url);
-          // If we have a full name, use its initials instead
-          if (data.full_name) {
-            const nameParts = data.full_name.split(' ');
-            if (nameParts.length >= 2) {
-              setInitials(`${nameParts[0][0]}${nameParts[1][0]}`.toUpperCase());
-            } else {
-              setInitials(data.full_name.substring(0, 2).toUpperCase());
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('avatar_url, full_name')
+            .eq('id', session.user.id)
+            .single();
+          
+          if (data && !error) {
+            setAvatarUrl(data.avatar_url);
+            // If we have a full name, use its initials instead
+            if (data.full_name) {
+              const nameParts = data.full_name.split(' ');
+              if (nameParts.length >= 2) {
+                setInitials(`${nameParts[0][0]}${nameParts[1][0]}`.toUpperCase());
+              } else {
+                setInitials(data.full_name.substring(0, 2).toUpperCase());
+              }
             }
           }
+        } catch (error) {
+          console.log("Error fetching profile:", error);
         }
       };
       
