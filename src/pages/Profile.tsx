@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -45,7 +44,6 @@ const Profile = () => {
           setAvatarUrl(profile.avatar_url || '');
         }
       } else {
-        setLoading(false);
         navigate('/auth');
       }
     });
