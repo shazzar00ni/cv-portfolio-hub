@@ -1,18 +1,16 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { Loader2, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import AnimatedSection from '@/components/AnimatedSection';
 import HeaderWithThemeToggle from '@/components/HeaderWithThemeToggle';
 import { Session } from '@supabase/supabase-js';
+import { useToast } from '@/hooks/use-toast';
 import { useProfile } from '@/hooks/use-profile';
 import MetaTags from '@/components/MetaTags';
+import ProfileHeader from '@/components/profile/ProfileHeader';
+import ProfileForm from '@/components/profile/ProfileForm';
 
 const Profile = () => {
   const { toast } = useToast();
@@ -51,9 +49,9 @@ const Profile = () => {
   }, [navigate, profile]);
 
   const handleUpdateProfile = async () => {
+    setUpdating(true);
+    
     try {
-      setUpdating(true);
-      
       const { error } = await updateProfile({
         full_name: fullName,
         username,
@@ -103,100 +101,23 @@ const Profile = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="col-span-1">
               <AnimatedSection delay={100}>
-                <Card>
-                  <CardHeader className="text-center">
-                    <div className="flex justify-center mb-4">
-                      <Avatar className="h-24 w-24">
-                        <AvatarImage src={avatarUrl} alt="Profile" />
-                        <AvatarFallback>
-                          {profile?.full_name?.split(' ').map(n => n[0]).join('') || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
-                    <CardTitle className="text-xl">
-                      {profile?.full_name || session?.user?.email?.split('@')[0] || 'User'}
-                    </CardTitle>
-                    <CardDescription>
-                      {session?.user?.email}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 text-center text-muted-foreground text-sm">
-                      <p>
-                        <User className="inline-block mr-2 h-4 w-4" />
-                        {profile?.username ? `@${profile.username}` : 'No username set'}
-                      </p>
-                      <p>Member since {new Date(session?.user?.created_at || Date.now()).toLocaleDateString()}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <ProfileHeader profile={profile} session={session} />
               </AnimatedSection>
             </div>
 
             <div className="col-span-1 md:col-span-2">
               <AnimatedSection delay={200}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Profile Information</CardTitle>
-                    <CardDescription>
-                      Update your profile details and personal information
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input 
-                        id="name" 
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        placeholder="Your full name"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="username">Username</Label>
-                      <Input 
-                        id="username" 
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Your username"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input 
-                        id="email" 
-                        value={session?.user?.email || ''}
-                        disabled
-                        placeholder="Your email address"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Email address cannot be changed
-                      </p>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="avatar">Avatar URL</Label>
-                      <Input 
-                        id="avatar" 
-                        value={avatarUrl}
-                        onChange={(e) => setAvatarUrl(e.target.value)}
-                        placeholder="https://example.com/avatar.jpg"
-                      />
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button 
-                      onClick={handleUpdateProfile} 
-                      disabled={updating}
-                      className="ml-auto"
-                    >
-                      {updating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Save Changes
-                    </Button>
-                  </CardFooter>
-                </Card>
+                <ProfileForm
+                  session={session}
+                  fullName={fullName}
+                  setFullName={setFullName}
+                  username={username}
+                  setUsername={setUsername}
+                  avatarUrl={avatarUrl}
+                  setAvatarUrl={setAvatarUrl}
+                  updating={updating}
+                  onUpdate={handleUpdateProfile}
+                />
               </AnimatedSection>
             </div>
           </div>
