@@ -12,6 +12,7 @@ import AnimatedSection from '@/components/AnimatedSection';
 import HeaderWithThemeToggle from '@/components/HeaderWithThemeToggle';
 import { Session } from '@supabase/supabase-js';
 import { useProfile } from '@/hooks/use-profile';
+import MetaTags from '@/components/MetaTags';
 
 const Profile = () => {
   const { toast } = useToast();
@@ -24,7 +25,6 @@ const Profile = () => {
   const { profile, loading, updateProfile } = useProfile(session);
 
   useEffect(() => {
-    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
@@ -34,7 +34,6 @@ const Profile = () => {
       }
     );
 
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session) {
@@ -85,6 +84,11 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <MetaTags 
+        title="Your Profile | Shannon Lockett Portfolio"
+        description="Manage your profile settings and personal information on Shannon Lockett's portfolio platform."
+        keywords="profile settings, user profile, account management"
+      />
       <HeaderWithThemeToggle />
       
       <main className="flex-1 py-12">

@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { Session } from '@supabase/supabase-js';
 import HeaderWithThemeToggle from '@/components/HeaderWithThemeToggle';
@@ -10,6 +9,7 @@ import Portfolio from '@/components/Portfolio';
 import Blog from '@/components/Blog';
 import Contact from '@/components/Contact';
 import { useResourceOptimization } from '@/hooks/use-resource-optimization';
+import MetaTags from '@/components/MetaTags';
 
 interface IndexProps {
   session?: Session | null;
@@ -46,6 +46,11 @@ const Index = ({ session }: IndexProps) => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <MetaTags 
+        title="Shannon Lockett | Web Development & Retail Management Portfolio"
+        description="Professional portfolio showcasing web development projects, retail management expertise, and published articles on technology and business."
+        keywords="Shannon Lockett, Web Developer, Retail Management, Portfolio, React, TypeScript, Frontend Development"
+      />
       <HeaderWithThemeToggle />
       <NavigationMenu />
       

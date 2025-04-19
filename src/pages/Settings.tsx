@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Session } from '@supabase/supabase-js';
 import { useProfile } from '@/hooks/use-profile';
+import MetaTags from '@/components/MetaTags';
 
 const Settings = () => {
   const { toast } = useToast();
@@ -21,13 +21,11 @@ const Settings = () => {
   const [saving, setSaving] = useState(false);
   const { profile, loading, updateProfile } = useProfile(session);
   
-  // Notification settings state
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [portfolioUpdates, setPortfolioUpdates] = useState(true);
   const [securityAlerts, setSecurityAlerts] = useState(true);
 
   useEffect(() => {
-    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
@@ -37,7 +35,6 @@ const Settings = () => {
       }
     );
 
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (!session) {
@@ -52,7 +49,6 @@ const Settings = () => {
     setSaving(true);
     
     try {
-      // In a real app, you would save these to your database
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
@@ -80,6 +76,11 @@ const Settings = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <MetaTags 
+        title="Account Settings | Shannon Lockett Portfolio"
+        description="Configure your account preferences and notification settings on Shannon Lockett's portfolio platform."
+        keywords="account settings, notifications, preferences, user settings"
+      />
       <HeaderWithThemeToggle />
       
       <main className="flex-1 py-12">
