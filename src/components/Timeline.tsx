@@ -1,9 +1,8 @@
-
 import TimelineItem from './TimelineItem';
 
 const Timeline = () => {
   return (
-    <div className="relative">
+    <div className="relative px-4 md:px-0">
       <TimelineItem
         title="GROCERY TEAM MEMBER"
         period="JUN 2023 - NOV 2024"
