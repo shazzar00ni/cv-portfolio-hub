@@ -1,8 +1,7 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { User } from 'lucide-react';
+import { User, Loader2 } from 'lucide-react';
 import AnimatedSection from '@/components/AnimatedSection';
 import HeaderWithThemeToggle from '@/components/HeaderWithThemeToggle';
 import { Session } from '@supabase/supabase-js';

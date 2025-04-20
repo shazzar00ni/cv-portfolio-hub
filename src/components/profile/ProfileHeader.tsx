@@ -1,5 +1,6 @@
 
 import { Session } from '@supabase/supabase-js';
+import { User } from 'lucide-react'; // Add the missing import for User icon
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Profile } from '@/hooks/use-profile';
