@@ -10,13 +10,14 @@ import Blog from '@/components/Blog';
 import Contact from '@/components/Contact';
 import { useResourceOptimization } from '@/hooks/use-resource-optimization';
 import MetaTags from '@/components/MetaTags';
+import { Linkedin, Github, Mail, Instagram } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface IndexProps {
   session?: Session | null;
 }
 
 const Index = ({ session }: IndexProps) => {
-  // Common resources to optimize
   useResourceOptimization({
     preconnectUrls: [
       'https://images.unsplash.com',
@@ -33,16 +34,35 @@ const Index = ({ session }: IndexProps) => {
   });
 
   useEffect(() => {
-    // Change page title
     document.title = "Shannon Lockett | Portfolio";
-    
-    // Add smooth scrolling to the page
     document.documentElement.style.scrollBehavior = 'smooth';
-    
     return () => {
       document.documentElement.style.scrollBehavior = 'auto';
     };
   }, []);
+
+  const socialLinks = [
+    {
+      icon: Linkedin,
+      url: "https://www.linkedin.com/in/shannon-lockett",
+      label: "LinkedIn profile of Shannon Lockett"
+    },
+    {
+      icon: Github,
+      url: "https://github.com/shazzar00ni",
+      label: "GitHub profile of Shannon Lockett"
+    },
+    {
+      icon: Instagram,
+      url: "https://www.instagram.com/shazzar00ni/",
+      label: "Instagram profile of Shannon Lockett"
+    },
+    {
+      icon: Mail,
+      url: "mailto:shanlockett@gmail.com",
+      label: "Send email to Shannon Lockett"
+    }
+  ];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -75,6 +95,27 @@ const Index = ({ session }: IndexProps) => {
               Not logged in
             </p>
           )}
+          
+          <div className="flex justify-center space-x-2 mt-4" aria-label="Social media links">
+            {socialLinks.map((link, index) => (
+              <Button
+                key={index}
+                variant="ghost"
+                size="icon"
+                asChild
+                className="rounded-full hover:bg-secondary"
+              >
+                <a 
+                  href={link.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                >
+                  <link.icon className="h-5 w-5" />
+                </a>
+              </Button>
+            ))}
+          </div>
         </div>
       </footer>
     </div>
