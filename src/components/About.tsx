@@ -15,9 +15,13 @@ const About = () => {
               </div>
             </div>
             
-            <div className="w-full md:w-5/6">
+            <div className="w-full md:w-5/6 space-y-4">
               <p className="text-base md:text-lg leading-relaxed">
-                With over 15 years of expertise in retail and retail management, I bring a wealth of knowledge and a proven track record of success to any organisation. My extensive experience has equipped me with strong leadership skills, exceptional customer service abilities, and a deep understanding of the retail industry. I am committed to driving sales and enhancing the customer experience, always striving for excellence in every aspect of retail operations.
+                I bring over 15 years of retail experience, including management positions at one of Australia's largest retailers, Woolworths Ltd. During that time, I developed a deep understanding of team leadership, customer relations, merchandise management, and day-to-day retail operations. I'm a results-driven operator with a practical mindset and an eye for detail.
+              </p>
+              
+              <p className="text-base md:text-lg leading-relaxed">
+                In recent years, I've been pivoting into the tech and digital space—teaching myself web development, digital design, and the fundamentals of blockchain and AI. My goal is to bridge the gap between retail and emerging technologies by building tools, platforms, and creative projects that simplify and enhance real-world retail and e-commerce experiences. I'm particularly drawn to automation, Web3, and user-friendly design that empowers both customers and businesses.
               </p>
             </div>
           </div>
