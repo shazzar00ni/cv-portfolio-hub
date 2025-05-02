@@ -4,8 +4,6 @@ import AnimatedSection from './AnimatedSection';
 import { useToast } from '@/hooks/use-toast';
 import { PortfolioItemType } from './portfolio/types';
 import PortfolioItem from './portfolio/PortfolioItem';
-import AddPortfolioItem from './portfolio/AddPortfolioItem';
-import PortfolioUploadModal from './portfolio/PortfolioUploadModal';
 import PortfolioFilter from './portfolio/PortfolioFilter';
 import { supabase } from "@/integrations/supabase/client";
 
@@ -14,7 +12,6 @@ const Portfolio = () => {
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItemType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [categories, setCategories] = useState<string[]>(['all']);
 
   // Fetch portfolio items from Supabase
@@ -70,101 +67,6 @@ const Portfolio = () => {
     ? portfolioItems 
     : portfolioItems.filter(item => item.category === filter);
 
-  const handleAddItem = async (item: PortfolioItemType) => {
-    try {
-      // Add item to Supabase
-      const { data, error } = await supabase
-        .from('portfolio_items')
-        .insert({
-          title: item.title,
-          description: item.description,
-          category: item.category,
-          image_url: item.image,
-          user_id: (await supabase.auth.getUser()).data.user?.id
-        })
-        .select();
-
-      if (error) {
-        console.error('Error adding portfolio item:', error);
-        toast({
-          title: "Failed to add project",
-          description: error.message,
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Transform returned data to match PortfolioItemType
-      const newItem: PortfolioItemType = {
-        id: data[0].id,
-        title: data[0].title,
-        description: data[0].description || '',
-        category: data[0].category || 'Uncategorized',
-        image: data[0].image_url || 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        alt: `Screenshot of ${data[0].title}`
-      };
-
-      setPortfolioItems(prev => [...prev, newItem]);
-      
-      // Update categories if new category was added
-      if (!categories.includes(newItem.category) && newItem.category !== '') {
-        setCategories(prev => [...prev, newItem.category]);
-      }
-
-      toast({
-        title: "Project added",
-        description: "Your project has been added to your portfolio",
-      });
-    } catch (error) {
-      console.error('Error in handleAddItem:', error);
-      toast({
-        title: "Something went wrong",
-        description: "Could not add portfolio item",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleRemoveItem = async (id: string) => {
-    try {
-      // Remove item from Supabase
-      const { error } = await supabase
-        .from('portfolio_items')
-        .delete()
-        .eq('id', id);
-
-      if (error) {
-        console.error('Error removing portfolio item:', error);
-        toast({
-          title: "Failed to remove project",
-          description: error.message,
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Remove item from state
-      setPortfolioItems(prev => prev.filter(item => item.id !== id));
-      
-      toast({
-        title: "Project removed",
-        description: "The project has been removed from your portfolio",
-      });
-      
-      // Update categories if needed
-      const updatedItems = portfolioItems.filter(item => item.id !== id);
-      const updatedCategories = ['all', ...new Set(updatedItems.map(item => item.category))];
-      setCategories(updatedCategories);
-    } catch (error) {
-      console.error('Error in handleRemoveItem:', error);
-      toast({
-        title: "Something went wrong",
-        description: "Could not remove portfolio item",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <section id="portfolio" className="py-12 md:py-24">
       <div className="container-custom">
@@ -188,27 +90,17 @@ const Portfolio = () => {
               ))
             ) : (
               // Render portfolio items
-              <>
-                {filteredItems.map((item) => (
-                  <PortfolioItem 
-                    key={item.id}
-                    item={item} 
-                    onRemove={handleRemoveItem} 
-                  />
-                ))}
-                
-                <AddPortfolioItem onClick={() => setIsUploadModalOpen(true)} />
-              </>
+              filteredItems.map((item) => (
+                <PortfolioItem 
+                  key={item.id}
+                  item={item} 
+                  onRemove={undefined} 
+                />
+              ))
             )}
           </div>
         </AnimatedSection>
       </div>
-
-      <PortfolioUploadModal 
-        isOpen={isUploadModalOpen}
-        onClose={() => setIsUploadModalOpen(false)}
-        onAddItem={handleAddItem}
-      />
     </section>
   );
 };

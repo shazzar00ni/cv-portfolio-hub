@@ -4,8 +4,6 @@ import { useToast } from '@/hooks/use-toast';
 import { BlogPostType } from './blog/types';
 import AnimatedSection from './AnimatedSection';
 import BlogPost from './blog/BlogPost';
-import AddBlogPost from './blog/AddBlogPost';
-import BlogPostModal from './blog/BlogPostModal';
 
 const Blog = () => {
   const { toast } = useToast();
@@ -62,12 +60,6 @@ const Blog = () => {
     },
   ]);
 
-  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
-
-  const handleAddPost = (post: BlogPostType) => {
-    setBlogPosts(prev => [post, ...prev]);
-  };
-
   return (
     <section id="blog" className="py-12 md:py-24 border-t border-muted">
       <div className="container-custom">
@@ -82,16 +74,9 @@ const Blog = () => {
             {blogPosts.map((post) => (
               <BlogPost key={post.id} post={post} />
             ))}
-            <AddBlogPost onClick={() => setIsPostModalOpen(true)} />
           </div>
         </AnimatedSection>
       </div>
-
-      <BlogPostModal 
-        isOpen={isPostModalOpen}
-        onClose={() => setIsPostModalOpen(false)}
-        onAddPost={handleAddPost}
-      />
     </section>
   );
 };
