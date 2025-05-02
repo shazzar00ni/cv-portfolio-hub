@@ -28,6 +28,7 @@
     <meta property="twitter:image" content="/og-image.png" />
     
     <!-- Resource hints -->
+    <meta name="theme-color" content="#000000" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
@@ -62,9 +63,28 @@
     <!-- Preload critical fonts -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <style>
+      .skip-to-content {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        z-index: 999;
+        padding: 1rem;
+        background-color: white;
+        color: black;
+        text-decoration: none;
+      }
+      
+      .skip-to-content:focus {
+        left: 0;
+        top: 0;
+      }
+    </style>
   </head>
 
   <body>
+    <a href="#main" class="skip-to-content">Skip to main content</a>
     <div id="root"></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>

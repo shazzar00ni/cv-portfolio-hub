@@ -29,14 +29,27 @@ const PortfolioFilter = ({
     return category.charAt(0).toUpperCase() + category.slice(1);
   };
 
+  // Handle keyboard navigation for filter buttons
+  const handleKeyDown = (e: React.KeyboardEvent, category: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onFilterChange(category);
+    }
+  };
+
   if (isMobile) {
     return (
       <div className="mb-6 flex justify-center">
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full max-w-[200px]">
+            <Button 
+              variant="outline" 
+              className="w-full max-w-[200px]"
+              aria-label={`Filter by ${formatCategory(selectedFilter)}`}
+              aria-expanded={isOpen}
+            >
               {formatCategory(selectedFilter)}
-              <ChevronDown className="ml-2 h-4 w-4" />
+              <ChevronDown className="ml-2 h-4 w-4" aria-hidden="true" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="w-[200px]">
@@ -47,7 +60,16 @@ const PortfolioFilter = ({
                   onFilterChange(category);
                   setIsOpen(false);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onFilterChange(category);
+                    setIsOpen(false);
+                  }
+                }}
                 className={selectedFilter === category ? "bg-secondary" : ""}
+                role="menuitem"
+                tabIndex={0}
               >
                 {formatCategory(category)}
               </DropdownMenuItem>
@@ -59,14 +81,16 @@ const PortfolioFilter = ({
   }
 
   return (
-    <div className="mb-8 flex flex-wrap justify-center gap-2">
+    <div className="mb-8 flex flex-wrap justify-center gap-2" role="toolbar" aria-label="Portfolio filters">
       {categories.map((category) => (
         <Button
           key={category}
           variant={selectedFilter === category ? "default" : "outline"}
           size="sm"
           onClick={() => onFilterChange(category)}
+          onKeyDown={(e) => handleKeyDown(e, category)}
           className="text-xs md:text-sm"
+          aria-pressed={selectedFilter === category}
         >
           {formatCategory(category)}
         </Button>

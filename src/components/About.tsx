@@ -10,7 +10,10 @@ const About = () => {
           
           <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
             <div className="w-full md:w-1/6 flex items-center justify-center mt-2" aria-hidden="true">
-              <div className="h-3 w-3 md:h-4 md:w-4 rounded-full bg-primary relative">
+              <div 
+                className="h-3 w-3 md:h-4 md:w-4 rounded-full bg-primary relative"
+                tabIndex={-1}
+              >
                 <span className="absolute top-0 left-0 h-full w-full bg-primary opacity-40 rounded-full animate-ping"></span>
               </div>
             </div>
