@@ -34,7 +34,7 @@ const Index = ({ session }: IndexProps) => {
   });
 
   useEffect(() => {
-    document.title = "Shannon Lockett | Portfolio";
+    document.title = "Shannon Lockett - Portfolio and CV";
     document.documentElement.style.scrollBehavior = 'smooth';
     return () => {
       document.documentElement.style.scrollBehavior = 'auto';
@@ -67,8 +67,8 @@ const Index = ({ session }: IndexProps) => {
   return (
     <div className="flex flex-col min-h-screen">
       <MetaTags 
-        title="Shannon Lockett | Web Development & Retail Management Portfolio"
-        description="Professional portfolio showcasing web development projects, retail management expertise, and published articles on technology and business."
+        title="Shannon Lockett - Portfolio and CV"
+        description="Retail professional and web designer/developer from Perth, Western Australia."
         keywords="Shannon Lockett, Web Developer, Retail Management, Portfolio, React, TypeScript, Frontend Development"
       />
       <HeaderWithThemeToggle />

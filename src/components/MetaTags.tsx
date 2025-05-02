@@ -10,8 +10,8 @@ interface MetaTagsProps {
 }
 
 const MetaTags = ({
-  title = "Shannon Lockett | Web Development & Retail Management Portfolio",
-  description = "Shannon Lockett's professional portfolio showcasing retail management expertise, web development projects, and published articles on technology and business.",
+  title = "Shannon Lockett - Portfolio and CV",
+  description = "Retail professional and web designer/developer from Perth, Western Australia.",
   keywords = "Shannon Lockett, Web Developer, Retail Management, Portfolio",
   imageUrl = "/og-image.png",
   type = "website"
