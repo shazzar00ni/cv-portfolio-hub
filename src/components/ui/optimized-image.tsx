@@ -43,8 +43,10 @@ export function OptimizedImage({
     setImageError(true);
   };
   
+  const fallbackUrl = fallback || getFallbackImageUrl();
+  
   const imageUrl = imageError && showFallbackOnError
-    ? fallback || getFallbackImageUrl()
+    ? fallbackUrl
     : getOptimizedImageUrl(src, width, quality);
   
   return (
@@ -75,7 +77,7 @@ export function OptimizedImage({
           'transition-opacity duration-300',
           imageLoaded ? 'opacity-100' : 'opacity-0',
           imageError && !showFallbackOnError ? 'hidden' : '',
-          `object-${objectFit}`
+          `object-${objectFit} w-full h-full`
         )}
         width={width}
         height={height}
