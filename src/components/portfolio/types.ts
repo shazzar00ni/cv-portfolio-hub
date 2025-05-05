@@ -6,4 +6,5 @@ export type PortfolioItemType = {
   description: string;
   category: string;
   alt?: string;
+  githubUrl?: string;
 };

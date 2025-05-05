@@ -19,7 +19,8 @@ const Portfolio = () => {
       description: 'A personal portfolio website built with React, TypeScript, and Tailwind CSS.',
       category: 'Web Development',
       image: 'public/lovable-uploads/36526ef8-ff40-49db-bd2b-ab02588f09f1.png',
-      alt: 'Screenshot of portfolio website'
+      alt: 'Screenshot of portfolio website',
+      githubUrl: 'https://github.com/users/shazzar00ni/projects/8/views/1'
     },
     {
       id: '2',
