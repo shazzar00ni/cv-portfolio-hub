@@ -21,6 +21,19 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    minify: 'terser', // Use Terser for better minification
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console logs in production
+        drop_debugger: true, // Remove debugger statements
+        pure_funcs: ['console.log'], // Remove console.log calls
+      },
+      output: {
+        comments: false, // Remove comments
+      }
+    },
+    cssMinify: true, // Ensure CSS minification
+    cssCodeSplit: true, // Split CSS for better caching
     rollupOptions: {
       output: {
         manualChunks: {
@@ -40,7 +53,5 @@ export default defineConfig(({ mode }) => ({
     sourcemap: false,
     // Configure output directory
     outDir: 'dist',
-    // Add cache-control headers
-    cssCodeSplit: true
   },
 }));

@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
@@ -84,7 +85,6 @@
     @apply text-sm md:text-base lg:text-lg;
   }
 
-  /* Mobile text optimization */
   @media (max-width: 640px) {
     html {
       font-size: 14px;
@@ -142,7 +142,6 @@
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 }
 
-/* Responsive adjustments */
 @media (max-width: 640px) {
   .container-custom {
     @apply px-3;
@@ -157,7 +156,6 @@
   }
 }
 
-/* Touch device optimizations */
 @media (hover: none) {
   .hover-lift:hover {
     transform: none;
