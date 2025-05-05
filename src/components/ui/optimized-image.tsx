@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { ImageOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { getOptimizedImageUrl, getFallbackImageUrl } from '@/lib/image-utils';
 
 interface OptimizedImageProps {
   src: string;
@@ -43,11 +42,12 @@ export function OptimizedImage({
     setImageError(true);
   };
   
-  const fallbackUrl = fallback || getFallbackImageUrl();
+  const fallbackUrl = fallback || 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
   
+  // Use the original image URL without additional processing for uploaded images
   const imageUrl = imageError && showFallbackOnError
     ? fallbackUrl
-    : getOptimizedImageUrl(src, width, quality);
+    : src;
   
   return (
     <div className={cn(

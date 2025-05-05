@@ -1,123 +1,56 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import AnimatedSection from './AnimatedSection';
 import { useToast } from '@/hooks/use-toast';
 import { PortfolioItemType } from './portfolio/types';
 import PortfolioItem from './portfolio/PortfolioItem';
 import PortfolioFilter from './portfolio/PortfolioFilter';
-import { supabase } from "@/integrations/supabase/client";
 
 const Portfolio = () => {
   const { toast } = useToast();
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItemType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState<string>('all');
-  const [categories, setCategories] = useState<string[]>(['all']);
+  
+  // Define the portfolio items with the specified projects and images
+  const portfolioItems: PortfolioItemType[] = [
+    {
+      id: '1',
+      title: 'My Portfolio Website',
+      description: 'A personal portfolio website built with React, TypeScript, and Tailwind CSS.',
+      category: 'Web Development',
+      image: 'public/lovable-uploads/36526ef8-ff40-49db-bd2b-ab02588f09f1.png',
+      alt: 'Screenshot of portfolio website'
+    },
+    {
+      id: '2',
+      title: 'Markdown Editor',
+      description: 'A feature-rich Markdown editor with live preview and syntax highlighting.',
+      category: 'Web Development',
+      image: 'public/lovable-uploads/1284b04a-f511-429d-8a14-f966375ddc4c.png',
+      alt: 'Screenshot of Markdown editor interface'
+    },
+    {
+      id: '3',
+      title: 'Artify-AI',
+      description: 'An AI-powered tool for creative design and art generation.',
+      category: 'AI/Machine Learning',
+      image: 'public/lovable-uploads/9af0bca4-24b4-4fa3-9edb-443e18020b2a.png',
+      alt: 'Screenshot of Artify-AI application'
+    },
+    {
+      id: '4',
+      title: 'snips.dev',
+      description: 'A platform for developers to share, organize, and showcase code snippets.',
+      category: 'Developer Tools',
+      image: 'public/lovable-uploads/b263ac65-4da0-436a-ae90-ba6115928a0c.png',
+      alt: 'Screenshot of snips.dev platform'
+    }
+  ];
+  
+  // Extract unique categories from portfolio items
+  const categories = ['all', ...new Set(portfolioItems.map(item => item.category))];
 
-  // Fetch portfolio items from Supabase
-  useEffect(() => {
-    const fetchPortfolioItems = async () => {
-      try {
-        setIsLoading(true);
-        const { data, error } = await supabase
-          .from('portfolio_items')
-          .select('*');
-
-        if (error) {
-          console.error('Error fetching portfolio items:', error);
-          toast({
-            title: "Failed to load portfolio",
-            description: error.message,
-            variant: "destructive",
-          });
-          
-          // Add fallback items when there's an error
-          setFallbackItems();
-          return;
-        }
-
-        // Transform Supabase data to match PortfolioItemType
-        const items: PortfolioItemType[] = data.map(item => ({
-          id: item.id,
-          title: item.title,
-          description: item.description || '',
-          category: item.category || 'Uncategorized',
-          image: item.image_url || 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-          alt: `Screenshot of ${item.title}`
-        }));
-
-        // If no items returned, use fallback items
-        if (items.length === 0) {
-          setFallbackItems();
-          return;
-        }
-        
-        setPortfolioItems(items);
-        
-        // Extract unique categories
-        const uniqueCategories = ['all', ...new Set(items.map(item => item.category))];
-        setCategories(uniqueCategories);
-      } catch (error) {
-        console.error('Error in fetchPortfolioItems:', error);
-        toast({
-          title: "Something went wrong",
-          description: "Could not load portfolio items",
-          variant: "destructive",
-        });
-        
-        // Add fallback items when there's an error
-        setFallbackItems();
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPortfolioItems();
-  }, [toast]);
-
-  const setFallbackItems = () => {
-    const fallbackItems: PortfolioItemType[] = [
-      {
-        id: '1',
-        title: 'E-commerce Website',
-        description: 'A modern e-commerce platform built with React and Node.js',
-        category: 'Web Development',
-        image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        alt: 'Screenshot of e-commerce website'
-      },
-      {
-        id: '2',
-        title: 'Mobile Banking App',
-        description: 'A secure mobile application for online banking services',
-        category: 'Mobile App',
-        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        alt: 'Screenshot of mobile banking app'
-      },
-      {
-        id: '3',
-        title: 'Company Intranet',
-        description: 'Internal portal for company resources and communication',
-        category: 'Web Development',
-        image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        alt: 'Screenshot of company intranet'
-      },
-      {
-        id: '4',
-        title: 'Task Management Dashboard',
-        description: 'Project management tool with analytics and team collaboration features',
-        category: 'UI/UX Design',
-        image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        alt: 'Screenshot of task management dashboard'
-      }
-    ];
-    
-    setPortfolioItems(fallbackItems);
-    
-    // Set categories for fallback items
-    const uniqueCategories = ['all', ...new Set(fallbackItems.map(item => item.category))];
-    setCategories(uniqueCategories);
-  };
-
+  // Filter items based on selected category
   const filteredItems = filter === 'all' 
     ? portfolioItems 
     : portfolioItems.filter(item => item.category === filter);
@@ -128,13 +61,11 @@ const Portfolio = () => {
         <AnimatedSection>
           <h2 className="section-heading">PORTFOLIO</h2>
           
-          {portfolioItems.length > 0 && (
-            <PortfolioFilter 
-              categories={categories}
-              selectedFilter={filter}
-              onFilterChange={setFilter}
-            />
-          )}
+          <PortfolioFilter 
+            categories={categories}
+            selectedFilter={filter}
+            onFilterChange={setFilter}
+          />
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {isLoading ? (

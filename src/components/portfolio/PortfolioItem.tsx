@@ -1,5 +1,4 @@
 
-import { X } from 'lucide-react';
 import AnimatedSection from '../AnimatedSection';
 import { PortfolioItemType } from './types';
 import { OptimizedImage } from '../ui/optimized-image';
@@ -9,7 +8,7 @@ interface PortfolioItemProps {
   onRemove: ((id: string) => void) | undefined;
 }
 
-const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
+const PortfolioItem = ({ item }: PortfolioItemProps) => {
   return (
     <AnimatedSection 
       key={item.id} 
@@ -25,19 +24,8 @@ const PortfolioItem = ({ item, onRemove }: PortfolioItemProps) => {
             height={225}
             className="w-full h-full"
             showFallbackOnError={true}
-            fallback="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             objectFit="cover"
           />
-          
-          {onRemove && (
-            <button 
-              onClick={() => onRemove(item.id)}
-              className="absolute top-2 right-2 p-1 bg-background/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity touch:opacity-70"
-              aria-label={`Remove ${item.title}`}
-            >
-              <X size={16} className="text-destructive" aria-hidden="true" />
-            </button>
-          )}
         </div>
         <div className="p-3 md:p-4">
           <h3 id={`portfolio-title-${item.id}`} className="text-base md:text-lg font-medium mb-1 md:mb-2">{item.title}</h3>
