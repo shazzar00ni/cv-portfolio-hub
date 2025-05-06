@@ -50,6 +50,30 @@ vi.mock('@/components/ui/avatar', () => ({
   AvatarFallback: ({ children }: any) => <div data-testid="avatar-fallback">{children}</div>,
 }));
 
+// Mock supabase client
+vi.mock('@/integrations/supabase/client', () => {
+  return {
+    supabase: {
+      from: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            single: vi.fn().mockReturnValue({
+              data: { 
+                avatar_url: 'https://example.com/avatar.jpg',
+                full_name: 'Test User'
+              }, 
+              error: null 
+            })
+          })
+        })
+      }),
+      auth: {
+        signOut: vi.fn().mockResolvedValue({ error: null })
+      }
+    }
+  };
+});
+
 describe('UserMenu', () => {
   const mockSession = {
     user: {
@@ -60,31 +84,6 @@ describe('UserMenu', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
-    // Fix mockReturnValue issue by properly typing the mock functions
-    const mockSingle = vi.fn(() => ({
-      data: { 
-        avatar_url: 'https://example.com/avatar.jpg',
-        full_name: 'Test User'
-      }, 
-      error: null 
-    }));
-
-    const mockEq = vi.fn(() => ({
-      single: mockSingle
-    }));
-
-    const mockSelect = vi.fn(() => ({
-      eq: mockEq
-    }));
-
-    // Properly type the mock to avoid the "Property 'mockReturnValue' does not exist on type 'never'" error
-    vi.spyOn(supabase, 'from').mockImplementation(() => ({
-      select: mockSelect
-    } as any));
-
-    // Mock supabase.auth.signOut
-    vi.spyOn(supabase.auth, 'signOut').mockResolvedValue({ error: null });
   });
 
   it('renders login button when no session is provided', () => {
