@@ -1,4 +1,3 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -61,19 +60,21 @@ describe('UserMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     
-    // Fix mockReturnValue issue with proper typing
-    vi.spyOn(supabase, 'from').mockImplementation(() => ({
-      select: vi.fn().mockImplementation(() => ({
-        eq: vi.fn().mockImplementation(() => ({
-          single: vi.fn().mockResolvedValue({ 
-            data: { 
-              avatar_url: 'https://example.com/avatar.jpg',
-              full_name: 'Test User'
-            }, 
-            error: null 
-          })
+    // Fix mockImplementation issue with proper typing
+    const mockSelect = vi.fn().mockImplementation(() => ({
+      eq: vi.fn().mockImplementation(() => ({
+        single: vi.fn().mockResolvedValue({ 
+          data: { 
+            avatar_url: 'https://example.com/avatar.jpg',
+            full_name: 'Test User'
+          }, 
+          error: null 
         }))
       }))
+    }));
+
+    vi.spyOn(supabase, 'from').mockImplementation(() => ({
+      select: mockSelect
     }) as any);
 
     // Mock supabase.auth.signOut
