@@ -1,6 +1,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { useProfile } from './use-profile';
 import { supabase } from '@/integrations/supabase/client';
 import { Session } from '@supabase/supabase-js';

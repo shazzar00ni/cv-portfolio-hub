@@ -1,6 +1,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import UserMenu from './UserMenu';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
