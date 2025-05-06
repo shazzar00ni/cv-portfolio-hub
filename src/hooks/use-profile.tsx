@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Session } from '@supabase/supabase-js';
 import { useToast } from '@/hooks/use-toast';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export type Profile = {
   id: string;
@@ -12,70 +13,89 @@ export type Profile = {
   updated_at: string | null;
 };
 
+// Separated profile fetching function for better testing and reuse
+export const fetchUserProfile = async (userId: string) => {
+  if (!userId) throw new Error('User ID is required');
+  
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, username, full_name, avatar_url, updated_at')
+    .eq('id', userId)
+    .single();
+  
+  if (error) throw error;
+  return data as Profile;
+};
+
 export function useProfile(session: Session | null) {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const userId = session?.user?.id;
+  
+  // Use React Query to handle caching, retries, and background updates
+  const { 
+    data: profile, 
+    isLoading: loading,
+    error 
+  } = useQuery({
+    queryKey: ['profile', userId],
+    queryFn: () => fetchUserProfile(userId as string),
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    retry: 1,
+    // Don't refetch on window focus for better performance
+    refetchOnWindowFocus: false
+  });
 
+  // Show error toast if fetch fails
   useEffect(() => {
-    async function fetchProfile() {
-      try {
-        if (!session?.user) {
-          setProfile(null);
-          return;
-        }
-
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-
-        if (error) {
-          throw error;
-        }
-
-        setProfile(data);
-      } catch (error: any) {
-        console.error('Error fetching profile:', error.message);
-        toast({
-          title: 'Error',
-          description: 'Failed to load profile data',
-          variant: 'destructive',
-        });
-      } finally {
-        setLoading(false);
-      }
+    if (error) {
+      console.error('Error fetching profile:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load profile data',
+        variant: 'destructive',
+      });
     }
+  }, [error, toast]);
 
-    fetchProfile();
-  }, [session, toast]);
-
-  const updateProfile = async (updates: Partial<Profile>) => {
-    try {
-      if (!session?.user) throw new Error('No user logged in');
+  // Profile update mutation
+  const updateProfileMutation = useMutation({
+    mutationFn: async (updates: Partial<Profile>) => {
+      if (!userId) throw new Error('No user logged in');
 
       const { error } = await supabase
         .from('profiles')
         .update(updates)
-        .eq('id', session.user.id);
+        .eq('id', userId);
 
       if (error) throw error;
-
-      setProfile(prev => prev ? { ...prev, ...updates } : null);
+      return { error: null };
+    },
+    onSuccess: (_, variables) => {
+      // Update the cache with new values instead of refetching
+      queryClient.setQueryData(['profile', userId], (oldData: Profile | undefined) => {
+        return oldData ? { ...oldData, ...variables } : oldData;
+      });
       
       toast({
         title: 'Success',
         description: 'Profile updated successfully',
       });
-
-      return { error: null };
-    } catch (error: any) {
+    },
+    onError: (error: any) => {
       toast({
         title: 'Error',
         description: error.message || 'Failed to update profile',
         variant: 'destructive',
       });
+    }
+  });
+
+  const updateProfile = async (updates: Partial<Profile>) => {
+    try {
+      return await updateProfileMutation.mutateAsync(updates);
+    } catch (error: any) {
       return { error };
     }
   };

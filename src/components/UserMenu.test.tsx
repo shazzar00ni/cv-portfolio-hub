@@ -54,19 +54,19 @@ vi.mock('@/components/ui/avatar', () => ({
 vi.mock('@/integrations/supabase/client', () => {
   return {
     supabase: {
-      from: vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockReturnValue({
+      from: vi.fn().mockImplementation(() => ({
+        select: vi.fn().mockImplementation(() => ({
+          eq: vi.fn().mockImplementation(() => ({
+            single: vi.fn().mockImplementation(() => ({
               data: { 
                 avatar_url: 'https://example.com/avatar.jpg',
                 full_name: 'Test User'
               }, 
               error: null 
-            })
-          })
-        })
-      }),
+            }))
+          }))
+        }))
+      })),
       auth: {
         signOut: vi.fn().mockResolvedValue({ error: null })
       }
