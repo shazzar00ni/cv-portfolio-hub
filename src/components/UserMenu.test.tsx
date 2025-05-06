@@ -61,22 +61,26 @@ describe('UserMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     
-    // Fix mockImplementation issue with proper typing
-    const mockSelect = vi.fn().mockImplementation(() => ({
-      eq: vi.fn().mockImplementation(() => ({
-        single: vi.fn().mockResolvedValue({ 
-          data: { 
-            avatar_url: 'https://example.com/avatar.jpg',
-            full_name: 'Test User'
-          }, 
-          error: null 
-        })
-      }))
-    }));
+    // Fix mockImplementation issue by using proper typing
+    const mockSingle = vi.fn().mockResolvedValue({
+      data: { 
+        avatar_url: 'https://example.com/avatar.jpg',
+        full_name: 'Test User'
+      }, 
+      error: null 
+    });
 
-    vi.spyOn(supabase, 'from').mockImplementation(() => ({
+    const mockEq = vi.fn().mockReturnValue({
+      single: mockSingle
+    });
+
+    const mockSelect = vi.fn().mockReturnValue({
+      eq: mockEq
+    });
+
+    vi.spyOn(supabase, 'from').mockReturnValue({
       select: mockSelect
-    }) as any);
+    } as any);
 
     // Mock supabase.auth.signOut
     vi.spyOn(supabase.auth, 'signOut').mockResolvedValue({ error: null });

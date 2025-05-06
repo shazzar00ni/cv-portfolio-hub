@@ -44,18 +44,23 @@ describe('useProfile hook', () => {
       updated_at: '2023-01-01T00:00:00Z',
     };
 
-    // Fix mockImplementation issue by creating a properly typed mock function
-    const mockEq = vi.fn().mockImplementation(() => ({
-      single: vi.fn().mockResolvedValue({ data: mockData, error: null }),
-    }));
+    // Fix mockImplementation issue by using proper typing
+    const mockSingle = vi.fn().mockResolvedValue({ 
+      data: mockData, 
+      error: null 
+    });
     
-    const mockSelect = vi.fn().mockImplementation(() => ({
+    const mockEq = vi.fn().mockReturnValue({
+      single: mockSingle
+    });
+    
+    const mockSelect = vi.fn().mockReturnValue({
       eq: mockEq
-    }));
+    });
 
-    vi.spyOn(supabase, 'from').mockImplementation(() => ({
+    vi.spyOn(supabase, 'from').mockReturnValue({
       select: mockSelect
-    }) as any);
+    } as any);
 
     const { result } = renderHook(() => useProfile(mockSession));
     
@@ -72,17 +77,22 @@ describe('useProfile hook', () => {
     const mockError = new Error('Failed to fetch profile');
     
     // Fix mockImplementation issue with proper typing
-    const mockEq = vi.fn().mockImplementation(() => ({
-      single: vi.fn().mockResolvedValue({ data: null, error: mockError }),
-    }));
+    const mockSingle = vi.fn().mockResolvedValue({ 
+      data: null, 
+      error: mockError 
+    });
     
-    const mockSelect = vi.fn().mockImplementation(() => ({
+    const mockEq = vi.fn().mockReturnValue({
+      single: mockSingle
+    });
+    
+    const mockSelect = vi.fn().mockReturnValue({
       eq: mockEq
-    }));
+    });
 
-    vi.spyOn(supabase, 'from').mockImplementation(() => ({
+    vi.spyOn(supabase, 'from').mockReturnValue({
       select: mockSelect
-    }) as any);
+    } as any);
 
     const { result } = renderHook(() => useProfile(mockSession));
     
@@ -103,24 +113,29 @@ describe('useProfile hook', () => {
     };
 
     // Fix mockImplementation issue with proper typing
-    const mockEq = vi.fn().mockImplementation(() => ({
-      single: vi.fn().mockResolvedValue({ data: mockData, error: null }),
-    }));
+    const mockSingle = vi.fn().mockResolvedValue({ 
+      data: mockData, 
+      error: null 
+    });
     
-    const mockSelect = vi.fn().mockImplementation(() => ({
+    const mockEq = vi.fn().mockReturnValue({
+      single: mockSingle
+    });
+    
+    const mockSelect = vi.fn().mockReturnValue({
       eq: mockEq
-    }));
+    });
 
     const mockEqUpdate = vi.fn().mockResolvedValue({ error: null });
     
-    const mockUpdate = vi.fn().mockImplementation(() => ({
+    const mockUpdate = vi.fn().mockReturnValue({
       eq: mockEqUpdate
-    }));
+    });
 
-    vi.spyOn(supabase, 'from').mockImplementation(() => ({
+    vi.spyOn(supabase, 'from').mockReturnValue({
       select: mockSelect,
       update: mockUpdate,
-    }) as any);
+    } as any);
 
     const { result } = renderHook(() => useProfile(mockSession));
     
