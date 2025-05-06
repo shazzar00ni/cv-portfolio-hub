@@ -143,7 +143,7 @@ This project is distributed under the MIT License. See the [LICENSE](LICENSE) fi
 Feel free to connect with me if you have any questions, suggestions, or feedback:
 
 - GitHub: [shazzar00ni](https://github.com/shazzar00ni)
-- Email: your-email@example.com
+- Email: shanlockett@gmail.com
 
 ---
 *Thank you for visiting my personal portfolio repository!*
