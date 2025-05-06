@@ -12,7 +12,8 @@ Thank you for taking the time to contribute to this personal portfolio repositor
 5. [Submitting Pull Requests](#submitting-pull-requests)
 6. [Commit Message Conventions](#commit-message-conventions)
 7. [Style Guidelines](#style-guidelines)
-8. [License](#license)
+8. [Templates](#templates)
+9. [License](#license)
 
 ---
 
@@ -136,6 +137,46 @@ Consistency is key. Please adhere to the following style practices:
 
 ---
 
+## Templates
+
+To streamline contributions, use the following templates:
+
+- **Issue Template:**
+  ```markdown
+  **Description:**
+  A clear and concise description of the issue.
+
+  **Steps to Reproduce:**
+  1. Step one
+  2. Step two
+
+  **Expected Behavior:**
+  What you expected to happen.
+
+  **Actual Behavior:**
+  What actually happened.
+
+  **Screenshots/Logs:**
+  (If applicable)
+  ```
+
+- **Pull Request Template:**
+  ```markdown
+  **Description:**
+  A detailed description of the changes made.
+
+  **Related Issues:**
+  (If applicable, reference related issues here.)
+
+  **Testing:**
+  Steps taken to test the changes.
+
+  **Additional Notes:**
+  Any additional context or information.
+  ```
+
+---
+
 ## License
 
 When you submit contributions, they are automatically licensed under the repository’s [MIT License](LICENSE).
@@ -143,4 +184,3 @@ When you submit contributions, they are automatically licensed under the reposit
 ---
 
 Thank you for your contributions. Your involvement helps enhance the quality, security, and usability of this project, and supports a collaborative community.
-```

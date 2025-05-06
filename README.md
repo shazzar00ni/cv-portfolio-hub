@@ -11,6 +11,9 @@ Welcome to my personal portfolio repository! This repository serves as a hub for
 - [Technologies](#technologies)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Architecture](#architecture)
+- [Deployment](#deployment)
+- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [Documentation](#documentation)
 - [License](#license)
@@ -73,6 +76,45 @@ npm start
 ```
 
 Then, open [http://localhost:3000](http://localhost:3000) in your browser to view the application. For detailed usage instructions, deployment strategies, and configuration settings, refer to the `docs/` directory.
+
+---
+
+## Architecture
+
+The project follows a modular architecture with the following key components:
+
+- **UI Components:** Reusable and accessible components located in the `src/components/ui/` directory.
+- **Pages:** Individual pages for routing, located in the `src/pages/` directory.
+- **Hooks:** Custom React hooks for shared logic, located in the `src/hooks/` directory.
+- **Integrations:** External service integrations, such as Supabase, located in the `src/integrations/` directory.
+- **Utilities:** Helper functions and utilities, located in the `src/lib/` directory.
+
+---
+
+## Deployment
+
+To deploy the application, follow these steps:
+
+1. **Build the project:**
+   ```bash
+   npm run build
+   ```
+2. **Deploy to Vercel:**
+   - Ensure the `vercel.json` configuration file is correctly set up.
+   - Use the Vercel CLI or dashboard to deploy the project.
+
+For other deployment platforms, refer to their specific documentation.
+
+---
+
+## Troubleshooting
+
+If you encounter issues, consider the following steps:
+
+- **Check Logs:** Review the console or server logs for error messages.
+- **Verify Dependencies:** Ensure all dependencies are installed and up-to-date.
+- **Consult Documentation:** Refer to the `docs/` directory for detailed guides.
+- **Open an Issue:** If the problem persists, open an issue in the repository with detailed information.
 
 ---
 
