@@ -18,7 +18,7 @@ const Portfolio = () => {
       title: 'My Portfolio Website',
       description: 'A personal portfolio website built with React, TypeScript, and Tailwind CSS.',
       category: 'Web Development',
-      image: 'public/lovable-uploads/36526ef8-ff40-49db-bd2b-ab02588f09f1.png',
+      image: '/lovable-uploads/36526ef8-ff40-49db-bd2b-ab02588f09f1.png',
       alt: 'Screenshot of portfolio website',
       githubUrl: 'https://github.com/users/shazzar00ni/projects/8/views/1'
     },
@@ -27,7 +27,7 @@ const Portfolio = () => {
       title: 'Markdown Editor',
       description: 'A feature-rich Markdown editor with live preview and syntax highlighting.',
       category: 'Web Development',
-      image: 'public/lovable-uploads/1284b04a-f511-429d-8a14-f966375ddc4c.png',
+      image: '/lovable-uploads/1284b04a-f511-429d-8a14-f966375ddc4c.png',
       alt: 'Screenshot of Markdown editor interface'
     },
     {
@@ -35,7 +35,7 @@ const Portfolio = () => {
       title: 'Artify-AI',
       description: 'An AI-powered tool for creative design and art generation.',
       category: 'AI/Machine Learning',
-      image: 'public/lovable-uploads/9af0bca4-24b4-4fa3-9edb-443e18020b2a.png',
+      image: '/lovable-uploads/9af0bca4-24b4-4fa3-9edb-443e18020b2a.png',
       alt: 'Screenshot of Artify-AI application'
     },
     {
@@ -43,7 +43,7 @@ const Portfolio = () => {
       title: 'snips.dev',
       description: 'A platform for developers to share, organize, and showcase code snippets.',
       category: 'Developer Tools',
-      image: 'public/lovable-uploads/b263ac65-4da0-436a-ae90-ba6115928a0c.png',
+      image: '/lovable-uploads/b263ac65-4da0-436a-ae90-ba6115928a0c.png',
       alt: 'Screenshot of snips.dev platform'
     }
   ];
