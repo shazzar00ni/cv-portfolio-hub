@@ -1,66 +1,67 @@
 
-import { vi } from 'vitest';
-
-// Mock Supabase client with all necessary methods
-export const createSupabaseMock = () => {
-  const mockStorage = {
-    from: vi.fn(() => ({
-      upload: vi.fn().mockResolvedValue({ error: null }),
-      getPublicUrl: vi.fn().mockReturnValue({ data: { publicUrl: 'https://example.com/image.jpg' } }),
-    })),
-  };
-
-  const mockInsert = vi.fn().mockReturnValue({
-    select: vi.fn().mockReturnValue({
-      single: vi.fn().mockResolvedValue({ data: { id: '1', title: 'Test' }, error: null }),
-      maybeSingle: vi.fn().mockResolvedValue({ data: { id: '1', title: 'Test' }, error: null }),
+// If this file doesn't exist, create it with a proper mock implementation
+export const supabaseMock = {
+  from: (table: string) => ({
+    select: () => ({
+      eq: (column: string, value: any) => ({
+        single: async () => ({
+          data: { id: '1', name: 'Test' },
+          error: null,
+        }),
+      }),
     }),
-  });
-
-  const mockUpdate = vi.fn().mockReturnValue({
-    eq: vi.fn().mockResolvedValue({ error: null }),
-  });
-
-  const mockDelete = vi.fn().mockReturnValue({
-    eq: vi.fn().mockResolvedValue({ error: null }),
-  });
-
-  const mockSelect = vi.fn().mockReturnValue({
-    eq: vi.fn().mockReturnValue({
-      single: vi.fn().mockResolvedValue({ data: { id: '1' }, error: null }),
-      maybeSingle: vi.fn().mockResolvedValue({ data: { id: '1' }, error: null }),
+    insert: (data: any) => ({
+      select: () => ({
+        single: async () => ({
+          data: { id: '1', ...data },
+          error: null,
+        }),
+      }),
     }),
-    order: vi.fn().mockReturnValue({
-      limit: vi.fn().mockResolvedValue({ data: [{ id: '1' }], error: null }),
+    update: (data: any) => ({
+      eq: async (column: string, value: any) => ({
+        data: { id: value, ...data },
+        error: null,
+      }),
     }),
-  });
-
-  const mockFrom = vi.fn().mockReturnValue({
-    insert: mockInsert,
-    update: mockUpdate,
-    delete: mockDelete,
-    select: mockSelect,
-  });
-
-  const mockAuth = {
-    getSession: vi.fn().mockResolvedValue({ data: { session: { user: { id: '1' } } }, error: null }),
-    signUp: vi.fn().mockResolvedValue({ data: { user: { id: '1' } }, error: null }),
-    signIn: vi.fn().mockResolvedValue({ data: { user: { id: '1' } }, error: null }),
-    signOut: vi.fn().mockResolvedValue({ error: null }),
-    onAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
-  };
-
-  return {
-    from: mockFrom,
-    storage: mockStorage,
-    auth: mockAuth,
-  };
+    delete: () => ({
+      eq: async (column: string, value: any) => ({
+        error: null,
+      }),
+    }),
+  }),
+  storage: {
+    from: (bucket: string) => ({
+      upload: async (path: string, fileBody: any) => ({
+        data: { path },
+        error: null,
+      }),
+      getPublicUrl: (path: string) => ({
+        data: { publicUrl: 'https://example.com/image.jpg' },
+      }),
+    }),
+  },
+  auth: {
+    getSession: async () => ({
+      data: {
+        session: {
+          user: { id: 'user-id', email: 'test@example.com' },
+          expires_at: Date.now() + 3600,
+        },
+      },
+      error: null,
+    }),
+    signIn: async () => ({
+      data: { user: { id: 'user-id', email: 'test@example.com' } },
+      error: null,
+    }),
+    signOut: async () => ({ error: null }),
+    signUp: async () => ({
+      data: { user: { id: 'user-id', email: 'test@example.com' } },
+      error: null,
+    }),
+    onAuthStateChange: () => ({
+      subscription: { unsubscribe: () => {} },
+    }),
+  },
 };
-
-// Create a mock for the supabase client
-export const supabaseMock = createSupabaseMock();
-
-// Mock the entire module
-vi.mock('@/integrations/supabase/client', () => ({
-  supabase: supabaseMock,
-}));

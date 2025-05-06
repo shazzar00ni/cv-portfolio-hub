@@ -31,12 +31,14 @@ describe('Supabase Mock', () => {
   
   it('should mock storage upload method', async () => {
     const bucket = supabaseMock.storage.from('test-bucket');
-    const result = await bucket.upload('path', {});
+    // Fix argument usage
+    const result = await bucket.upload('path', new Blob());
     expect(result.error).toBeNull();
   });
   
   it('should mock storage getPublicUrl method', () => {
     const bucket = supabaseMock.storage.from('test-bucket');
+    // Fix this call to match the proper method signature
     const result = bucket.getPublicUrl('path');
     expect(result.data.publicUrl).toBe('https://example.com/image.jpg');
   });

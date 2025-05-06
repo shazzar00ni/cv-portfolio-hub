@@ -1,6 +1,6 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import UserMenu from './UserMenu';
 import { Session } from '@supabase/supabase-js';
@@ -61,10 +61,10 @@ describe('UserMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     
-    // Mock supabase.from for profile fetching
-    vi.spyOn(supabase, 'from').mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
+    // Fix mockReturnValue issue with proper typing
+    vi.spyOn(supabase, 'from').mockImplementation(() => ({
+      select: vi.fn().mockImplementation(() => ({
+        eq: vi.fn().mockImplementation(() => ({
           single: vi.fn().mockResolvedValue({ 
             data: { 
               avatar_url: 'https://example.com/avatar.jpg',
@@ -73,8 +73,8 @@ describe('UserMenu', () => {
             error: null 
           })
         })
-      })
-    } as any);
+      }))
+    }) as any);
 
     // Mock supabase.auth.signOut
     vi.spyOn(supabase.auth, 'signOut').mockResolvedValue({ error: null });
@@ -99,8 +99,9 @@ describe('UserMenu', () => {
   it('shows proper navigation links', () => {
     render(<UserMenu session={mockSession} />);
     
+    // Fix getAttribute issue by properly typing the elements
     const links = screen.getAllByRole('link');
-    const linkUrls = Array.from(links).map(link => link.getAttribute('href'));
+    const linkUrls = links.map(link => (link as HTMLAnchorElement).getAttribute('href'));
     
     expect(linkUrls).toContain('/profile');
     expect(linkUrls).toContain('/settings');
