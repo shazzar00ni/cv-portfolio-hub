@@ -78,9 +78,10 @@ describe('UserMenu', () => {
       eq: mockEq
     }));
 
-    vi.spyOn(supabase, 'from').mockReturnValue({
+    // Properly type the mock to avoid the "Property 'mockReturnValue' does not exist on type 'never'" error
+    vi.spyOn(supabase, 'from').mockImplementation(() => ({
       select: mockSelect
-    } as any);
+    } as any));
 
     // Mock supabase.auth.signOut
     vi.spyOn(supabase.auth, 'signOut').mockResolvedValue({ error: null });

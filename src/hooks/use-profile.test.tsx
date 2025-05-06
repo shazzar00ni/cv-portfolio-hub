@@ -58,9 +58,10 @@ describe('useProfile hook', () => {
       eq: mockEq
     }));
 
-    vi.spyOn(supabase, 'from').mockReturnValue({
+    // Use mockImplementation instead of mockReturnValue
+    vi.spyOn(supabase, 'from').mockImplementation(() => ({
       select: mockSelect
-    } as any);
+    } as any));
 
     const { result } = renderHook(() => useProfile(mockSession));
     
@@ -90,9 +91,10 @@ describe('useProfile hook', () => {
       eq: mockEq
     }));
 
-    vi.spyOn(supabase, 'from').mockReturnValue({
+    // Use mockImplementation instead of mockReturnValue
+    vi.spyOn(supabase, 'from').mockImplementation(() => ({
       select: mockSelect
-    } as any);
+    } as any));
 
     const { result } = renderHook(() => useProfile(mockSession));
     
@@ -132,10 +134,11 @@ describe('useProfile hook', () => {
       eq: mockEqUpdate
     }));
 
-    vi.spyOn(supabase, 'from').mockReturnValue({
+    // Use mockImplementation instead of mockReturnValue
+    vi.spyOn(supabase, 'from').mockImplementation(() => ({
       select: mockSelect,
       update: mockUpdate,
-    } as any);
+    } as any));
 
     const { result } = renderHook(() => useProfile(mockSession));
     
