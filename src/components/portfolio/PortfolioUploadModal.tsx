@@ -1,11 +1,11 @@
 
 import { useState } from 'react';
-import { Image as ImageIcon, X } from 'lucide-react';
-import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PortfolioItemType } from './types';
-import { supabase } from '@/integrations/supabase/client';
+import { ImageUpload } from './ImageUpload';
+import { PortfolioForm } from './PortfolioForm';
+import { uploadPortfolioImage, getDefaultPortfolioImage } from '@/services/portfolioService';
 
 interface PortfolioUploadModalProps {
   isOpen: boolean;
@@ -39,30 +39,8 @@ const PortfolioUploadModal = ({ isOpen, onClose, onAddItem }: PortfolioUploadMod
     }
   };
 
-  const uploadImage = async (file: File): Promise<string> => {
-    try {
-      // Generate a unique file name
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-      const filePath = `portfolio/${fileName}`;
-
-      // Upload the file to Supabase Storage (fallback to a public URL if upload fails)
-      const { error } = await supabase.storage
-        .from('portfolio')
-        .upload(filePath, file);
-
-      if (error) {
-        console.error("Storage upload error:", error);
-        throw error;
-      }
-
-      // Get the public URL
-      const { data } = supabase.storage.from('portfolio').getPublicUrl(filePath);
-      return data.publicUrl;
-    } catch (error) {
-      console.error("Image upload failed:", error);
-      return ''; // Return empty string if upload fails
-    }
+  const handleItemChange = (updates: Partial<PortfolioItemType>) => {
+    setNewItem(prev => ({ ...prev, ...updates }));
   };
 
   const handleUpload = async (e: React.FormEvent) => {
@@ -83,12 +61,12 @@ const PortfolioUploadModal = ({ isOpen, onClose, onAddItem }: PortfolioUploadMod
       // If image file exists, try to upload it
       let imagePath = '';
       if (imageFile) {
-        imagePath = await uploadImage(imageFile);
+        imagePath = await uploadPortfolioImage(imageFile);
       }
 
       // Use fallback image if upload failed or no image was selected
       if (!imagePath) {
-        imagePath = 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+        imagePath = getDefaultPortfolioImage();
       }
     
       // Add the new item with the image URL
@@ -126,6 +104,11 @@ const PortfolioUploadModal = ({ isOpen, onClose, onAddItem }: PortfolioUploadMod
     setImagePreview('');
   };
 
+  const handleRemoveImage = () => {
+    setImagePreview('');
+    setImageFile(null);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -141,107 +124,24 @@ const PortfolioUploadModal = ({ isOpen, onClose, onAddItem }: PortfolioUploadMod
           </button>
         </div>
         
-        <form onSubmit={handleUpload} className="p-6">
+        <div className="p-6 pb-0">
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">Project Image</label>
-            <div className={cn(
-              "border-2 border-dashed border-muted rounded-lg p-4 text-center",
-              imagePreview ? "border-primary" : ""
-            )}>
-              {imagePreview ? (
-                <div className="relative aspect-video mb-2">
-                  <img 
-                    src={imagePreview} 
-                    alt="Preview" 
-                    className="w-full h-full object-cover rounded-md" 
-                  />
-                  <button 
-                    type="button"
-                    onClick={() => {
-                      setImagePreview('');
-                      setImageFile(null);
-                    }}
-                    className="absolute top-2 right-2 p-1 bg-background/80 rounded-full"
-                  >
-                    <X size={16} className="text-destructive" />
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center py-4">
-                  <ImageIcon size={40} className="text-muted-foreground mb-2" />
-                  <p className="text-sm text-muted-foreground mb-1">
-                    Drag & drop or click to upload
-                  </p>
-                </div>
-              )}
-              <input 
-                type="file" 
-                accept="image/*" 
-                onChange={handleFileChange}
-                className="hidden" 
-                id="image-upload" 
-              />
-              <label 
-                htmlFor="image-upload" 
-                className="mt-2 inline-block px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium cursor-pointer"
-              >
-                {imagePreview ? 'Replace Image' : 'Select Image'}
-              </label>
-            </div>
-          </div>
-          
-          <div className="mb-4">
-            <label htmlFor="title" className="block text-sm font-medium mb-2">Title</label>
-            <input 
-              type="text" 
-              id="title"
-              value={newItem.title} 
-              onChange={(e) => setNewItem({...newItem, title: e.target.value})}
-              className="w-full px-3 py-2 border border-muted rounded-md" 
-              required 
+            <ImageUpload 
+              imagePreview={imagePreview}
+              onFileChange={handleFileChange}
+              onRemoveImage={handleRemoveImage}
             />
           </div>
-          
-          <div className="mb-4">
-            <label htmlFor="category" className="block text-sm font-medium mb-2">Category</label>
-            <input 
-              type="text" 
-              id="category" 
-              value={newItem.category} 
-              onChange={(e) => setNewItem({...newItem, category: e.target.value})}
-              className="w-full px-3 py-2 border border-muted rounded-md" 
-              required 
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label htmlFor="description" className="block text-sm font-medium mb-2">Description</label>
-            <textarea 
-              id="description" 
-              value={newItem.description} 
-              onChange={(e) => setNewItem({...newItem, description: e.target.value})}
-              className="w-full px-3 py-2 border border-muted rounded-md" 
-              rows={3} 
-              required 
-            />
-          </div>
-          
-          <div className="flex justify-end gap-3 mt-6">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={resetFormAndClose}
-            >
-              Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              disabled={isUploading || !newItem.title || !newItem.description || !newItem.category}
-            >
-              {isUploading ? 'Uploading...' : 'Add Project'}
-            </Button>
-          </div>
-        </form>
+        </div>
+        
+        <PortfolioForm 
+          newItem={newItem}
+          isUploading={isUploading}
+          onItemChange={handleItemChange}
+          onCancel={resetFormAndClose}
+          onSubmit={handleUpload}
+        />
       </div>
     </div>
   );
