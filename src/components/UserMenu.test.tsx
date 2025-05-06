@@ -72,7 +72,7 @@ describe('UserMenu', () => {
             }, 
             error: null 
           })
-        })
+        }))
       }))
     }) as any);
 
