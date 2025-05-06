@@ -1,3 +1,4 @@
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -69,7 +70,7 @@ describe('UserMenu', () => {
             full_name: 'Test User'
           }, 
           error: null 
-        }))
+        })
       }))
     }));
 
