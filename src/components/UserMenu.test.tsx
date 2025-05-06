@@ -61,22 +61,22 @@ describe('UserMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     
-    // Fix mockImplementation issue by using proper typing
-    const mockSingle = vi.fn().mockResolvedValue({
+    // Fix mockReturnValue issue by properly typing the mock functions
+    const mockSingle = vi.fn(() => ({
       data: { 
         avatar_url: 'https://example.com/avatar.jpg',
         full_name: 'Test User'
       }, 
       error: null 
-    });
+    }));
 
-    const mockEq = vi.fn().mockReturnValue({
+    const mockEq = vi.fn(() => ({
       single: mockSingle
-    });
+    }));
 
-    const mockSelect = vi.fn().mockReturnValue({
+    const mockSelect = vi.fn(() => ({
       eq: mockEq
-    });
+    }));
 
     vi.spyOn(supabase, 'from').mockReturnValue({
       select: mockSelect

@@ -44,19 +44,19 @@ describe('useProfile hook', () => {
       updated_at: '2023-01-01T00:00:00Z',
     };
 
-    // Fix mockImplementation issue by using proper typing
-    const mockSingle = vi.fn().mockResolvedValue({ 
+    // Fix mockReturnValue issue by properly typing the mock functions
+    const mockSingle = vi.fn(() => ({ 
       data: mockData, 
       error: null 
-    });
+    }));
     
-    const mockEq = vi.fn().mockReturnValue({
+    const mockEq = vi.fn(() => ({
       single: mockSingle
-    });
+    }));
     
-    const mockSelect = vi.fn().mockReturnValue({
+    const mockSelect = vi.fn(() => ({
       eq: mockEq
-    });
+    }));
 
     vi.spyOn(supabase, 'from').mockReturnValue({
       select: mockSelect
@@ -76,19 +76,19 @@ describe('useProfile hook', () => {
   it('should handle errors when fetching profile', async () => {
     const mockError = new Error('Failed to fetch profile');
     
-    // Fix mockImplementation issue with proper typing
-    const mockSingle = vi.fn().mockResolvedValue({ 
+    // Fix mockReturnValue issue with proper typing of mock functions
+    const mockSingle = vi.fn(() => ({ 
       data: null, 
       error: mockError 
-    });
+    }));
     
-    const mockEq = vi.fn().mockReturnValue({
+    const mockEq = vi.fn(() => ({
       single: mockSingle
-    });
+    }));
     
-    const mockSelect = vi.fn().mockReturnValue({
+    const mockSelect = vi.fn(() => ({
       eq: mockEq
-    });
+    }));
 
     vi.spyOn(supabase, 'from').mockReturnValue({
       select: mockSelect
@@ -112,25 +112,25 @@ describe('useProfile hook', () => {
       updated_at: '2023-01-01T00:00:00Z',
     };
 
-    // Fix mockImplementation issue with proper typing
-    const mockSingle = vi.fn().mockResolvedValue({ 
+    // Fix mockReturnValue issue with proper typing of mock functions
+    const mockSingle = vi.fn(() => ({ 
       data: mockData, 
       error: null 
-    });
+    }));
     
-    const mockEq = vi.fn().mockReturnValue({
+    const mockEq = vi.fn(() => ({
       single: mockSingle
-    });
+    }));
     
-    const mockSelect = vi.fn().mockReturnValue({
+    const mockSelect = vi.fn(() => ({
       eq: mockEq
-    });
+    }));
 
-    const mockEqUpdate = vi.fn().mockResolvedValue({ error: null });
+    const mockEqUpdate = vi.fn(() => ({ error: null }));
     
-    const mockUpdate = vi.fn().mockReturnValue({
+    const mockUpdate = vi.fn(() => ({
       eq: mockEqUpdate
-    });
+    }));
 
     vi.spyOn(supabase, 'from').mockReturnValue({
       select: mockSelect,
