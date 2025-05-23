@@ -1,4 +1,3 @@
-
 {
   "headers": [
     {
@@ -107,11 +106,5 @@
       ]
     }
   ],
-  "routes": [
-    {
-      "handle": "filesystem"
-    }
-  ],
-  "build": {
-  }
+  "build": {}
 }
