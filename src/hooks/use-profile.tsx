@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Session } from '@supabase/supabase-js';
@@ -33,17 +32,18 @@ export function useProfile(session: Session | null) {
   const userId = session?.user?.id;
   
   // Use React Query to handle caching, retries, and background updates
-  const { 
-    data: profile, 
-    isLoading: loading,
-    error 
+  const {
+    data: profile,
+    isLoading,
+    isError,
+    error,
+    status
   } = useQuery({
     queryKey: ['profile', userId],
     queryFn: () => fetchUserProfile(userId as string),
     enabled: !!userId,
     staleTime: 5 * 60 * 1000, // 5 minutes cache
     retry: 1,
-    // Don't refetch on window focus for better performance
     refetchOnWindowFocus: false
   });
 
@@ -100,9 +100,16 @@ export function useProfile(session: Session | null) {
     }
   };
 
+  // If no session/userId, loading should be false
+  let loading = false;
+  if (!!userId) {
+    loading = isLoading && !isError;
+  }
+
   return {
-    profile,
+    profile: isError ? undefined : profile,
     loading,
+    updating: updateProfileMutation.isPending,
     updateProfile,
   };
 }

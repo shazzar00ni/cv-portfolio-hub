@@ -1,4 +1,3 @@
-
 /**
  * Utility functions for image handling and optimization
  */
@@ -35,6 +34,9 @@ export const getFallbackImageUrl = (): string => {
 export const getTimeAgo = (dateString: string): string => {
   try {
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return dateString;
+    }
     
     // Calculate time difference in milliseconds
     const now = new Date();

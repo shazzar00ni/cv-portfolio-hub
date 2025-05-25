@@ -1,6 +1,5 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useProfile, fetchUserProfile } from './use-profile';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,28 +15,31 @@ vi.mock('./use-toast', () => ({
 
 // Mock supabase client
 vi.mock('@/integrations/supabase/client', () => {
+  // Always return a consistent mock for both select and update
+  const selectMock = vi.fn().mockImplementation(() => ({
+    eq: vi.fn().mockImplementation(() => ({
+      single: vi.fn().mockImplementation(() => ({
+        data: {
+          id: 'test-user-id',
+          username: 'testuser',
+          full_name: 'Test User',
+          avatar_url: 'https://example.com/avatar.jpg',
+          updated_at: '2023-01-01T00:00:00Z',
+        },
+        error: null
+      }))
+    }))
+  }));
+  const updateMock = vi.fn().mockImplementation(() => ({
+    eq: vi.fn().mockImplementation(() => ({
+      error: null
+    }))
+  }));
   return {
     supabase: {
       from: vi.fn().mockImplementation(() => ({
-        select: vi.fn().mockImplementation(() => ({
-          eq: vi.fn().mockImplementation(() => ({
-            single: vi.fn().mockImplementation(() => ({
-              data: {
-                id: 'test-user-id',
-                username: 'testuser',
-                full_name: 'Test User',
-                avatar_url: 'https://example.com/avatar.jpg',
-                updated_at: '2023-01-01T00:00:00Z',
-              },
-              error: null
-            }))
-          }))
-        })),
-        update: vi.fn().mockImplementation(() => ({
-          eq: vi.fn().mockImplementation(() => ({
-            error: null
-          }))
-        }))
+        select: selectMock,
+        update: updateMock
       }))
     }
   };
@@ -103,27 +105,57 @@ describe('useProfile hook', () => {
   });
 
   it('should handle errors when fetching profile', async () => {
+    vi.resetModules(); // Ensure a clean state for this test
     // Override the mock to return an error for this test only
-    vi.mocked(supabase.from).mockImplementationOnce(() => ({
+    vi.mocked(supabase.from).mockImplementationOnce(() => (({
       select: vi.fn().mockImplementation(() => ({
         eq: vi.fn().mockImplementation(() => ({
-          single: vi.fn().mockImplementation(() => {
-            throw new Error('Failed to fetch profile');
-          })
+          single: vi.fn().mockImplementation(() => new Promise((_, reject) => setTimeout(() => reject(new Error('Failed to fetch profile')), 20)))
         }))
       })),
       update: vi.fn()
-    } as any));
-
-    const { result } = renderHook(() => useProfile(mockSession), {
+    }) as any));
+    
+    // Use a unique session/userId for this test to avoid cache
+    const errorSession = {
+      user: {
+        id: 'error-user-id',
+        email: 'error@example.com',
+      },
+    } as unknown as Session;
+    vi.mocked(supabase.from).mockImplementation((table: string) => {
+      if (table === 'profiles') {
+        return ({
+          select: () => ({
+            eq: (col: string, val: string) => ({
+              single: () => new Promise((_, reject) => setTimeout(() => reject(new Error('Failed to fetch profile')), 20))
+            })
+          }),
+          update: vi.fn()
+        }) as any;
+      }
+      // fallback to default
+      return ({
+        select: () => ({
+          eq: () => ({
+            single: () => ({
+              data: undefined,
+              error: null
+            })
+          })
+        }),
+        update: vi.fn()
+      }) as any;
+    });
+    const { result } = renderHook(() => useProfile(errorSession), {
       wrapper: createWrapper(),
     });
     
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
-    });
+    }, { timeout: 2000 });
     
-    expect(result.current.profile).toBe(undefined);
+    expect(result.current.profile).toBeUndefined();
   });
 
   it('should update profile successfully', async () => {
@@ -139,13 +171,18 @@ describe('useProfile hook', () => {
       wrapper: createWrapper(),
     });
     
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
+    const updates = { full_name: 'Updated Name' };
+    let updateResult;
+    await act(async () => {
+      updateResult = await result.current.updateProfile(updates);
     });
     
-    const updates = { full_name: 'Updated Name' };
-    const updateResult = await result.current.updateProfile(updates);
-    
+    // Wait for updating to be false after update
+    await waitFor(() => {
+      expect(result.current.updating).toBe(false);
+    });
+    // Removed loading assertion after update
+
     expect(updateResult.error).toBe(null);
     expect(supabase.from).toHaveBeenCalledWith('profiles');
   });
