@@ -10,29 +10,33 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
     
     steps:
-    - uses: actions/checkout@v4
+     uses: actions/checkout@v4
     
-    - name: Set up Node.js
+    name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
         
-    - name: Install dependencies
+    name: Install dependencies
       run: npm ci
       
-    - name: Run tests with coverage
+    name: Run tests with coverage
       run: npm run test:coverage
       
-    - name: Upload coverage to GitHub Actions artifacts
+    name: Upload coverage to GitHub Actions artifacts
       uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: coverage/
         
-    - name: Upload coverage to Codecov
+    name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
         file: ./coverage/lcov.info
