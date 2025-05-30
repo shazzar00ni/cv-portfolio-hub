@@ -1,0 +1,18 @@
+# Table of contents
+
+* [Personal Portfolio](README.md)
+* [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md)
+* [Contributing Guidelines (V1)](CONTRIBUTING\(V1\).md)
+* [Contributing Guidelines (V2)](CONTRIBUTING.md)
+* [MIT License](LICENSE.md)
+* [Welcome to your Lovable project](READMElovable.md)
+* [Security](SECURITY.md)
+* [Support](support.md)
+* [.github](.github/README.md)
+  * [ISSUE\_TEMPLATE](.github/issue_template/README.md)
+    * [bug\_report](.github/ISSUE_TEMPLATE/bug_report.md)
+    * [donumentation-issue](.github/ISSUE_TEMPLATE/donumentation-issue.md)
+    * [feature\_request](.github/ISSUE_TEMPLATE/feature_request.md)
+    * [performance-issue](.github/ISSUE_TEMPLATE/performance-issue.md)
+    * [security-issue](.github/ISSUE_TEMPLATE/security-issue.md)
+    * [support-question](.github/ISSUE_TEMPLATE/support-question.md)
