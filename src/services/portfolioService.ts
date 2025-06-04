@@ -1,34 +1,18 @@
 
-import { supabase } from '@/integrations/supabase/client';
-
 /**
- * Uploads an image file to Supabase Storage
+ * Uploads an image file (simplified version without Supabase)
  * @param file The file to upload
- * @returns The public URL of the uploaded file, or empty string if upload fails
+ * @returns A placeholder URL since we're not using backend storage
  */
 export const uploadPortfolioImage = async (file: File): Promise<string> => {
   try {
-    // Generate a unique file name
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-    const filePath = `portfolio/${fileName}`;
-
-    // Upload the file to Supabase Storage
-    const { error } = await supabase.storage
-      .from('portfolio')
-      .upload(filePath, file);
-
-    if (error) {
-      console.error("Storage upload error:", error);
-      throw error;
-    }
-
-    // Get the public URL
-    const { data } = supabase.storage.from('portfolio').getPublicUrl(filePath);
-    return data.publicUrl;
+    // Since we're not using Supabase anymore, we'll return the default image
+    // In a real implementation, you could upload to a different service
+    console.log('File selected:', file.name);
+    return getDefaultPortfolioImage();
   } catch (error) {
     console.error("Image upload failed:", error);
-    return ''; // Return empty string if upload fails
+    return '';
   }
 };
 
