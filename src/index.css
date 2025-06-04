@@ -5,6 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import image styles */
+@import './styles/image-styles.css';
+
 /* Theme variables */
 @layer base {
   :root {
@@ -64,6 +67,7 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', sans-serif;
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
