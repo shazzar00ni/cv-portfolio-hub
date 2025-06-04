@@ -1,5 +1,5 @@
+
 import { useEffect } from 'react';
-import { Session } from '@supabase/supabase-js';
 import HeaderWithThemeToggle from '@/components/HeaderWithThemeToggle';
 import NavigationMenu from '@/components/NavigationMenu';
 import About from '@/components/About';
@@ -13,11 +13,7 @@ import MetaTags from '@/components/MetaTags';
 import { Linkedin, Github, Mail, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface IndexProps {
-  session?: Session | null;
-}
-
-const Index = ({ session }: IndexProps) => {
+const Index = () => {
   useResourceOptimization({
     preconnectUrls: [
       'https://images.unsplash.com',
@@ -86,15 +82,6 @@ const Index = ({ session }: IndexProps) => {
       <footer className="py-6 md:py-8 text-center text-xs md:text-sm text-muted-foreground border-t border-muted">
         <div className="container-custom">
           <p>© {new Date().getFullYear()} Shannon Lockett. All rights reserved.</p>
-          {session ? (
-            <p className="text-xs text-muted-foreground mt-1">
-              Logged in as: {session.user?.email}
-            </p>
-          ) : (
-            <p className="text-xs text-muted-foreground mt-1">
-              Not logged in
-            </p>
-          )}
           
           <div className="flex justify-center space-x-2 mt-4" aria-label="Social media links">
             {socialLinks.map((link, index) => (

@@ -5,9 +5,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import image styles */
-@import './styles/image-styles.css';
-
 /* Theme variables */
 @layer base {
   :root {
@@ -170,4 +167,22 @@
     transform: translateY(-2px);
     transition: transform 0.1s ease;
   }
+}
+
+/* Image styles */
+.optimized-image {
+  transition: opacity 0.3s ease;
+}
+
+.optimized-image.loading {
+  opacity: 0.7;
+}
+
+.optimized-image.loaded {
+  opacity: 1;
+}
+
+.optimized-image.error {
+  opacity: 0.5;
+  filter: grayscale(100%);
 }
