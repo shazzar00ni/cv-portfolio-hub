@@ -8,6 +8,10 @@ on:
     branches: [ main ]
 
 jobs:
+  my-job:
+    permissions:
+      contents: read
+      pull-requests: write
   test:
     runs-on: ubuntu-latest
     
